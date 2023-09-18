@@ -1,11 +1,8 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
 }
 
 code {
@@ -13,9 +10,15 @@ code {
     monospace;
 }
 
+html body {
+  height: 100%;
+}
+
 .footer {
   position: relative;
-  margin-top: 85px; 
+  margin-top: 200px; 
+  width: 100%;
+  bottom: 0;
   height: 150px;
   clear:both;
   padding-top:20px;
@@ -110,32 +113,6 @@ code {
   position: relative;
   line-height: 3rem;
 }
-
-.gallery_overlay span:before,
-.gallery_overlay span:after {
-  content: "";
-  position: absolute;
-  height: 2px;
-  width: 0;
-  background: white;
-  transition: width .3s ease-out .2s;
-}
-
-.gallery_overlay span:before {
-  top: 0;
-  left: 0;
-}
-
-.gallery_overlay span:after {
-  bottom: 0;
-  right: 0;
-}
-
-.gallery_link:hover .gallery_overlay span:before,
-.gallery_link:hover .gallery_overlay span:after {
-  width: 100%;
-}
-
 .image-wrapper {
   display: flex;
 }
@@ -151,3 +128,101 @@ code {
   height: 130px;
   object-fit: cover;
 }
+
+.siderSmall {
+  position: absolute;
+  width: 75px;
+  height: 100%;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.siderSmall.fixed {
+  position: fixed;
+  width: 75px;
+  height: 100%;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.siderBig {
+  position: absolute;
+  width: 400px;
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  right: 0;
+  z-index: 2;
+}
+
+.siderBig.fixed {
+  position: fixed;
+  width: 400px;
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  top: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.headerSmall {
+  position: relative;
+  width: 100%;
+  height: auto;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.headerSmall.fixed {
+  position: fixed;
+  width: 100%;
+  height: auto;
+  top: 0%;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+
+.headerBig {
+  position: relative;
+  width: auto;
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  right: 0;
+  z-index: 2;
+}
+
+.headerBig.fixed {
+  position: fixed;
+  width: auto;
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  top: 0%;
+  right: 0;
+  z-index: 2;
+}
+
+
+.input-box input {
+  width: 500px;
+  height: 38px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding-left: 2%;
+}
+
+.error {
+  color: red;
+  font-size: small;
+}
+

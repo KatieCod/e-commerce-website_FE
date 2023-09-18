@@ -4,12 +4,15 @@ import { faCamera, faFaceSmileWink, faVideo} from '@fortawesome/free-solid-svg-i
 import { faDove } from '@fortawesome/free-solid-svg-icons'
 
 function Footer() {
+
+    const baseUrl = "http://localhost:3000"
+
     return (
         <footer class="footer">
             <div className="p-3 bg-light text-dark">
                 <div className="row align-items-center">
                     <div className="col-md text-md-left text-center">
-                        <img src="clionce.png" width="300" height="81" className="d-inline-block align-top" alt="" />
+                        <img src={`${baseUrl}/mainpage/clionce.png `} width="300" height="81" className="d-inline-block align-top" alt="" />
                     </div>
                     <div className="col-md text-md-left text-center mt-3">
                         <ul class="nav flex-column">

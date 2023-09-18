@@ -1,53 +1,119 @@
 import './App.css';
-import Homepage from './Homepage';
-import RegistrationForm from './RegistrationPage';
-import Header from './Header';
-import Footer from './Footer';
-import Login from './Login';
+import Homepage from './pages/Homepage';
+import RegistrationForm from './pages/RegistrationPage';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
+import ResetSuccess from './pages/ResetSuccess';
+import NewPassword from './pages/NewPassword';
+import AboutUsPage from './pages/AboutUsPage';
+import ContactUs from './pages/ContactUs';
 import { Route, Routes } from 'react-router-dom';
-import Shop from './Shop';
-import ProductPage from './ProductPage';
-import CartPage from './CartPage';
-import CheckourPage from './CheckoutPage';
+import Shop from './pages/Shop';
+import ProductPage from './pages/ProductPage';
+import CartPage from './pages/CartPage';
+import CheckourPage from './pages/CheckoutPage';
+import UserPage from './pages/UserPage';
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
+import LoginHook from './pages/LoginHook';
+import { Context } from './context';
 import { useNavigate } from "react-router-dom";
+
 
 function App() {
 
+  const [authorized, setAuthorized] = useState(false)
   const [currentUser, setCurrentUser] = useState({})
+  const [urlData, setUrlData] = useState({})
+  let [products, setProducts] = useState([]);
+  let [orders, setOrders] = useState([]);
+  let [orderDetails, setOrderDetails] = useState([]);
 
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
-      axios.get('http://localhost:3100/users/currentUser')
-          .then(result => {
-              if (!result.data.failure) {
-                  // setAuth(true)
-                  setCurrentUser(result.data)
-                  console.log('hi')
-                  console.log(result)
-              } else {
-                console.log('bye')
-              }
-          })
-          .catch(err => console.log(err))
+    axios.get('http://localhost:3100/users/currentUser')
+      .then(result => {
+        if (!result.data.failure) {
+          setAuthorized(true)
+          setCurrentUser(result.data)
+        } else {
+          setCurrentUser({})
+        }
+      })
+      .catch(err => console.log(err))
+  }, [authorized])
+
+  const handleAuthorization = (bool) => {
+    setAuthorized(bool)
+  }
+
+  const handleLogout = () => {
+    axios.get('http://localhost:3100/users/logout')
+      .then(res => {
+        setAuthorized(false)
+        setCurrentUser({})
+        window.location.reload(true);
+      }).catch(err => console.log(err))
+  }
+
+  const handleUrlData = (data) => {
+    setUrlData(data)
+    console.log(data)
+  }
+
+  useEffect(() => {
+    let products = axios.get('http://localhost:3100/products')
+    products.then(res => {
+      setProducts(res.data)
+    })
   }, [])
 
+  useEffect(() => {
+    let orders = axios.get('http://localhost:3100/orders')
+    orders.then(res => {
+      setOrders(res.data)
+    })
+  }, [])
+
+  useEffect(() => {
+    let orders = axios.get('http://localhost:3100/orders/order-details')
+    orders.then(res => {
+      setOrderDetails(res.data)
+      console.log(`these are order details ${res.data}`)
+    })
+  }, [])
+ 
   return (
-    <>
-      <Header />
-    <Routes>
-      <Route path="/homepage" element={<Homepage/>}/>
-      <Route path="/registration_form" element={<RegistrationForm/>} />
-      <Route path="/login_page" element={<Login />} />
-      <Route path="/shop" element={<Shop/>} />
-      <Route path="/product_page" element={<ProductPage/>} />
-      <Route path="/cart_page" element={<CartPage/>} />
-      <Route path="/checkout_page" element={<CheckourPage />} />
-    </Routes>
-    <Footer />
-    </>
+    <Context.Provider value={{
+      products,
+      currentUser,
+      orders,
+      orderDetails
+    }}>
+      <>
+        <Header currentUser={currentUser} authorized={authorized} handleLogout={handleLogout} />
+        <Routes>
+          <Route path="/homepage" element={<Homepage />} />
+          <Route path="/registration_form" element={<RegistrationForm />} />
+          <Route path="/login_page" element={<LoginHook handleAuthorization={handleAuthorization} />} />
+          <Route path="/reset_password" element={<ResetPassword handleUrlData={handleUrlData} />} />
+          <Route path="/reset_success" element={<ResetSuccess />} />
+          <Route path="/new_password" element={<NewPassword urlData={urlData} />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/shop/:name?" element={<Shop />} />
+          <Route path="/cart_page" element={<CartPage />} />
+          <Route path="/checkout_page" element={<CheckourPage />} />
+          <Route path="/about-us" element={<AboutUsPage />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/product/:id" element={<ProductPage />} />
+          <Route path="/user-page" element={<UserPage />} />
+        </Routes>
+        <Footer />
+      </>
+    </Context.Provider>
   );
 }
 

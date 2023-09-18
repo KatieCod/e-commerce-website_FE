@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Validator, { field } from "./Validations";
+import Validator, { field } from "../Validations";
 import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import { Link, Navigate } from "react-router-dom";

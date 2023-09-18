@@ -1,8 +1,8 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandshakeSimple, faLeaf, faMedal, faPaw } from '@fortawesome/free-solid-svg-icons'
-import Product from "./Product";
-import ChooseUs from "./ChooseUs";
+import Product from "../components/Product";
+import ChooseUs from "../components/ChooseUs";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 // import fetching from "./fetching";
@@ -31,13 +31,13 @@ function Homepage() {
 
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img class="d-block w-100" src="masks.png" alt="First slide" />
+                        <img class="d-block w-100" src="./slider/masks.png" alt="First slide" />
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100" src="giveaway.png" alt="Second slide" />
+                        <img class="d-block w-100" src="./slider/giveaway.png" alt="Second slide" />
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100" src="newyear.png" alt="Third slide" />
+                        <img class="d-block w-100" src="./slider/newyear.png" alt="Third slide" />
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -52,11 +52,12 @@ function Homepage() {
             <div className="d-flex justify-content-center mt-5">
                 <h3>FEATURED PRODUCTS</h3>
             </div>
+
             <div className="container mt-4">
                 <div className="row">
                     {products.map(product => {
-                        if(product.featured === 1) {
-                            return <div className="col-md"><Product image={product.main_photo} name={product.name} price={product.unit_price} /></div>
+                        if (product.featured === 1) {
+                            return <div className="col-md"><Product product={product} /></div>
                         }
                     })}
                 </div>
@@ -83,7 +84,7 @@ function Homepage() {
                 <div class="gallery">
                     <div class="gallery_item gallery_item--1 ">
                         <a href="#" class="gallery_link">
-                            <img src="6.jpg" class="gallery_image" />
+                            <img src="./mainpage/6.jpg" class="gallery_image" />
                             <div class="gallery_overlay">
                                 <span>Calming liquid</span>
                             </div>
@@ -91,7 +92,7 @@ function Homepage() {
                     </div>
                     <div class="gallery_item gallery_item--2 ">
                         <a href="#" class="gallery_link">
-                            <img src="1.jpg" class="gallery_image" />
+                            <img src="./mainpage/1.jpg" class="gallery_image" />
                             <div class="gallery_overlay">
                                 <span>Yoghurt mask</span>
                             </div>
@@ -99,7 +100,7 @@ function Homepage() {
                     </div>
                     <div class="gallery_item gallery_item--3 ">
                         <a href="#" class="gallery_link">
-                            <img src="3.jpg" class="gallery_image" />
+                            <img src="./mainpage/3.jpg" class="gallery_image" />
                             <div class="gallery_overlay">
                                 <span>Moisture Cream</span>
                             </div>
@@ -107,7 +108,7 @@ function Homepage() {
                     </div>
                     <div class="gallery_item gallery_item--4 ">
                         <a href="#" class="gallery_link">
-                            <img src="7.jpg" class="gallery_image" />
+                            <img src="./mainpage/7.jpg" class="gallery_image" />
                             <div class="gallery_overlay">
                                 <span>Hyaluronic Serum</span>
                             </div>
@@ -115,7 +116,7 @@ function Homepage() {
                     </div>
                     <div class="gallery_item gallery_item--5 ">
                         <a href="#" class="gallery_link">
-                            <img src="8.jpg" class="gallery_image" />
+                            <img src="./mainpage/8.jpg" class="gallery_image" />
                             <div class="gallery_overlay">
                                 <span>Propolis Toner</span>
                             </div>
@@ -123,7 +124,7 @@ function Homepage() {
                     </div>
                     <div class="gallery_item gallery_item--6 ">
                         <a href="#" class="gallery_link">
-                            <img src="2.jpg" class="gallery_image" />
+                            <img src="./mainpage/2.jpg" class="gallery_image" />
                             <div class="gallery_overlay">
                                 <span>Cica Toner</span>
                             </div>
