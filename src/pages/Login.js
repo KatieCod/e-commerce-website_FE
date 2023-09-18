@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
-
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
-import { validateLogin } from "./validationManager";
-
+import { validateLogin } from "../validations/validationManager";
 import axios from "axios";
 
-function LoginPage() {
+function LoginPage(props) {
     const [formData, setFormData] = useState({ email: '', password: '', first_name: '' })
     const [errors, setErrors] = useState({})
     const [serverResponse, setServerResponse] = useState()
@@ -39,8 +36,10 @@ function LoginPage() {
                             ...prevData,
                             first_name: result.data.first_name
                         }))
+                        props.handleAuthorization(false)
+                        props.handleAuthorization(true)
                         navigate('/homepage')
-                        console.log(formData)
+                        window.location.reload(true);
                     } else {
                         setServerResponse(result.data.failure)
                     }
@@ -77,12 +76,15 @@ function LoginPage() {
                     <Form.Control.Feedback type="invalid">
                         {errors.passwordError}
                     </Form.Control.Feedback>
+                <Container className="text-center mt-3">
+                    <Link to='/reset_password'><Form.Text>Forgot your password?</Form.Text></Link>
+                </Container>
                 </Form.Group>
                 <Container className="d-flex justify-content-center">
                     <Button type="submit" className="mt-3 mb-5 btn btn-secondary" onClick={validateAndProceed}>Log in</Button>
                 </Container>
-                <Row className="justify-content-center mt-5">
-                    <Col className="text-center" xs md="2">{serverResponse}</Col>
+                <Row className="justify-content-center">
+                    <Col className="text-center">{serverResponse}</Col>
                 </Row>
             </Form>
         </Container>
