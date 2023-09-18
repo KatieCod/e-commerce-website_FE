@@ -23,6 +23,8 @@ function Shop() {
     const [skinTypeProducts, setSkinTypeProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("Category");
     const [selectedSkinType, setSelectedSkinType] = useState("Skin type");
+    const [fromPrice, setFromPrice] = useState("");
+    const [toPrice, setToPrice] = useState("");
 
     const { name } = useParams()
 
@@ -57,6 +59,16 @@ function Shop() {
         setSelectedSkinType(eventKey);
     };
 
+    const handleFromPriceChange = (e) => {
+        setFromPrice(e.target.value);
+    };
+
+    const handleToPriceChange = (e) => {
+        setToPrice(e.target.value);
+        console.log(e.target.value);
+    };
+
+
     const productsInRow = 4;
     let productsRow = [];
     let categoryRow = [];
@@ -72,10 +84,14 @@ function Shop() {
 
     const filteredBySkinType = selectedSkinType === 'All' || selectedSkinType === 'Skin type'
         ? filteredProducts
-        : filteredProducts.filter((item1) =>{ return skinTypeProducts.some(item2 => item1.id === item2.id)})
+        : filteredProducts.filter((item1) => { return skinTypeProducts.some(item2 => item1.id === item2.id) })
 
-    for (let i = 0; i < filteredBySkinType.length; i += productsInRow) {
-        const row = filteredBySkinType.slice(i, i + productsInRow);
+    const filteredPrice = !fromPrice || !toPrice
+        ? filteredBySkinType
+        : filteredBySkinType.filter((product) => product.unit_price >= fromPrice && product.unit_price <= toPrice)
+
+    for (let i = 0; i < filteredPrice.length; i += productsInRow) {
+        const row = filteredPrice.slice(i, i + productsInRow);
         productsRow.push(row)
     }
 
@@ -106,20 +122,28 @@ function Shop() {
                     {!showFilter ? <h5></h5> :
                         <Container style={{ backgroundColor: 'whitesmoke' }}>
                             <Row className="text-center  mt-5">
-                                <Row className="mt-4 ">
-                                    <Col> Price </Col>
-                                    <Col >
-                                        <Form.Control
-                                            placeholder="From"
-                                        />
-                                    </Col>
-                                    <Col>-</Col>
-                                    <Col>
-                                        <Form.Control
-                                            placeholder="To"
-                                        />
-                                    </Col>
-                                </Row>
+                                <Form>
+                                    <Row className="mt-4 ">
+                                        <Col> Price </Col>
+                                        <Col >
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="From"
+                                                value={fromPrice}
+                                                onChange={handleFromPriceChange}
+                                            />
+                                        </Col>
+                                        <Col>-</Col>
+                                        <Col>
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="To"
+                                                value={toPrice}
+                                                onChange={handleToPriceChange}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </Form>
 
                                 <Col className="mt-4">
                                     <Dropdown onSelect={handleCategoryChange}>
@@ -159,34 +183,35 @@ function Shop() {
                             </Row>
                         </Container>
                     }
-                </Form>
+                </Form >
 
-                {Object.keys(categoryProducts).length > 0 ?
-                    categoryRow.map((row) => {
-                        return <Row className="mt-5">
-                            {row.map(product => {
-                                return (<Col className="mt-4" lg={3} sm={6}>
-                                    <Product product={product} />
-                                </Col>)
-                            })}
-                        </Row>
-                    })
-                    :
-                    productsRow.map((row) => {
-                        return <Row className="mt-5">
-                            {row.map(product => {
-                                return (<Col className="mt-4" lg={3} sm={6}>
-                                    <Product product={product} />
-                                </Col>)
-                            })}
-                        </Row>
-                    })
+                {
+                    Object.keys(categoryProducts).length > 0 ?
+                        categoryRow.map((row) => {
+                            return <Row className="mt-5">
+                                {row.map(product => {
+                                    return (<Col className="mt-4" lg={3} sm={6}>
+                                        <Product product={product} />
+                                    </Col>)
+                                })}
+                            </Row>
+                        })
+                        :
+                        productsRow.map((row) => {
+                            return <Row className="mt-5">
+                                {row.map(product => {
+                                    return (<Col className="mt-4" lg={3} sm={6}>
+                                        <Product product={product} />
+                                    </Col>)
+                                })}
+                            </Row>
+                        })
                 }
 
-                <Container className="mt-5 d-flex justify-content-center">
+                < Container className="mt-5 d-flex justify-content-center" >
                     <Button variant="light">Show More</Button>
-                </Container>
-            </Container>
+                </Container >
+            </Container >
         </>
     )
 }
