@@ -1,13 +1,13 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandshakeSimple, faLeaf, faMedal, faPaw } from '@fortawesome/free-solid-svg-icons'
-import Product from "../components/Product";
+import ProductForMainPage from "../components/ProductForMainPage";
 import ChooseUs from "../components/ChooseUs";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-// import fetching from "./fetching";
 import axios from "axios";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Homepage() {
 
@@ -19,6 +19,8 @@ function Homepage() {
             setProducts(res.data)
         })
     }, [])
+
+    const notify = () => toast('you have reached stock maximum');
 
     return (
         <div>
@@ -57,10 +59,11 @@ function Homepage() {
                 <div className="row">
                     {products.map(product => {
                         if (product.featured === 1) {
-                            return <div className="col-md"><Product product={product} /></div>
+                            return <div className="col-md"><ProductForMainPage product={product} notify={notify}/></div>
                         }
                     })}
                 </div>
+                <ToastContainer />
             </div>
             <div className="d-flex justify-content-center mt-5">
                 <Link to="/shop"><button type="button" class="btn btn-outline-success">Explore More</button></Link>

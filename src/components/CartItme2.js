@@ -12,7 +12,7 @@ function CartItem2(props) {
         axios.post('http://localhost:3100/cart/remove-from-cart', {id: product_id})
             .then(result => {
                 if (!result.data.failure) {
-                    // props.toggleChangeCart()
+                    props.toggleChangeCart()
                 } else {
                     console.log(result.data.failure)
                 }

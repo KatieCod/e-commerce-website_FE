@@ -13,6 +13,8 @@ import ShopHeader from "../components/ShopHeader";
 import { cleanup } from "@testing-library/react";
 import { Context } from "../context";
 import { useParams } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Shop() {
 
@@ -25,6 +27,7 @@ function Shop() {
     const [selectedSkinType, setSelectedSkinType] = useState("Skin type");
     const [fromPrice, setFromPrice] = useState("");
     const [toPrice, setToPrice] = useState("");
+    const [sider, toggleSider] = useToggle(false)
 
     const { name } = useParams()
 
@@ -51,6 +54,8 @@ function Shop() {
         })
     }, [selectedSkinType])
 
+    const notify = () => toast('you have reached stock maximum');
+
     const handleCategoryChange = (eventKey) => {
         setSelectedCategory(eventKey);
     };
@@ -67,7 +72,6 @@ function Shop() {
         setToPrice(e.target.value);
         console.log(e.target.value);
     };
-
 
     const productsInRow = 4;
     let productsRow = [];
@@ -94,10 +98,10 @@ function Shop() {
         const row = filteredPrice.slice(i, i + productsInRow);
         productsRow.push(row)
     }
-
+        
     return (
         <>
-            {width > 870 ? <ShopSider /> : <ShopHeader />}
+            {width > 870 ? <ShopSider sider={sider} /> : <ShopHeader />}
             <Container>
                 <h1 className="text-center mt-5">Store</h1>
                 <Form inline>
@@ -191,7 +195,7 @@ function Shop() {
                             return <Row className="mt-5">
                                 {row.map(product => {
                                     return (<Col className="mt-4" lg={3} sm={6}>
-                                        <Product product={product} />
+                                        <Product product={product} notify={notify} toggleSider={toggleSider} sider={sider} />
                                     </Col>)
                                 })}
                             </Row>
@@ -201,12 +205,13 @@ function Shop() {
                             return <Row className="mt-5">
                                 {row.map(product => {
                                     return (<Col className="mt-4" lg={3} sm={6}>
-                                        <Product product={product} />
+                                        <Product product={product} notify={notify} toggleSider={toggleSider} sider={sider}/>
                                     </Col>)
                                 })}
                             </Row>
                         })
                 }
+                <ToastContainer />
 
                 < Container className="mt-5 d-flex justify-content-center" >
                     <Button variant="light">Show More</Button>
