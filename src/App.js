@@ -20,6 +20,8 @@ import axios from "axios";
 import LoginHook from './pages/LoginHook';
 import { Context } from './context';
 import { useNavigate } from "react-router-dom";
+import ShopSider from './components/ShopSider';
+import { useToggle } from './hooks/useToggle';
 
 
 function App() {
@@ -30,7 +32,7 @@ function App() {
   let [products, setProducts] = useState([]);
   let [orders, setOrders] = useState([]);
   let [orderDetails, setOrderDetails] = useState([]);
-
+  
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
@@ -82,7 +84,6 @@ function App() {
     let orders = axios.get('http://localhost:3100/orders/order-details')
     orders.then(res => {
       setOrderDetails(res.data)
-      console.log(`these are order details ${res.data}`)
     })
   }, [])
  
@@ -91,7 +92,7 @@ function App() {
       products,
       currentUser,
       orders,
-      orderDetails
+      orderDetails,
     }}>
       <>
         <Header currentUser={currentUser} authorized={authorized} handleLogout={handleLogout} />
@@ -112,6 +113,7 @@ function App() {
           <Route path="/user-page" element={<UserPage />} />
         </Routes>
         <Footer />
+        <ShopSider/>
       </>
     </Context.Provider>
   );

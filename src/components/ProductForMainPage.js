@@ -1,15 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar, faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-regular-svg-icons'
 import { Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Context } from "../context";
 import { useToggle } from "../hooks/useToggle";
 
 
-function Product(props) {
+function ProductForMainPage(props) {
 
     const [changeCart1, toggleChangeCart1] = useToggle(false);
     const [changeCart2, toggleChangeCart2] = useToggle(false);
@@ -91,7 +90,7 @@ function Product(props) {
                 <Row>
                     <Col xs={4} className="text-right"></Col>
                     <Col xs={4} className="text-center"><h5 >${unit_price}</h5></Col>
-                    <Col xs={4} className="text-right"><div onClick={() => { addToCart(); props.toggleSider()}} style={{ cursor: 'pointer' }}><FontAwesomeIcon icon={faCartShopping} style={{ marginRight: "8px" }} size="xl" /></div></Col>
+                    <Col xs={4} className="text-right"><div onClick={() => { addToCart()}} style={{ cursor: 'pointer' }}><FontAwesomeIcon icon={faCartShopping} style={{ marginRight: "8px" }} size="xl" /></div></Col>
                 </Row>
                 :
                 <Row>
@@ -99,9 +98,9 @@ function Product(props) {
                     <Col xs={6} className="text-right">
                         <Row>
                             <div>
-                                <button style={{ width: '30px', border: 0, borderRadius: '1px', backgroundColor: 'whitesmoke' }} onClick={() => { addToCart(); props.toggleSider()}}>+</button>
+                                <button style={{ width: '30px', border: 0, borderRadius: '1px', backgroundColor: 'whitesmoke' }} onClick={() => { addToCart()}}>+</button>
                                 <input style={{ width: '30px', border: 0, textAlign: 'center' }} value={itemQuantity} />
-                                <button style={{ width: '30px', border: 0, borderRadius: '1px', backgroundColor: 'whitesmoke' }} onClick={() => { decreaseQunatity(); props.toggleSider() }}>-</button>
+                                <button style={{ width: '30px', border: 0, borderRadius: '1px', backgroundColor: 'whitesmoke' }} onClick={() => { decreaseQunatity()}}>-</button>
                             </div>
                         </Row>
                     </Col>
@@ -119,4 +118,4 @@ function Product(props) {
     )
 }
 
-export default Product;
+export default ProductForMainPage;

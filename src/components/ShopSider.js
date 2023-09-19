@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping, faHeart, faRightToBracket, faMagnifyingGlass, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { useToggle } from '../hooks/useToggle'
@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import CartItem2 from "./CartItme2";
 
-function ShopSider() {
+function ShopSider(props) {
 
     const [cartItems, setCartItems] = useState([])
     const [showCart, toggleShowCart] = useToggle(false)
@@ -18,7 +18,7 @@ function ShopSider() {
         cartProducts.then(res => {
             setCartItems(res.data)
         })
-    }, [showCart, changeCart])
+    }, [showCart, changeCart, props.sider])
 
     useEffect(() => {
         const handleScroll = () => {
