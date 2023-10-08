@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { validateLogin } from "../validations/validationManager";
+import { validateLogin } from "./validationManager";
 import axios from "axios";
 
 function LoginPage(props) {

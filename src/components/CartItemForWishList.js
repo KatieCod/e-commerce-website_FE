@@ -5,12 +5,12 @@ import { Card, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { Context } from "../context";
 
-function CartItem(props) {
-    const { toggleIAmState, currentUser, setStateForShopItemQuantity, stateForShopItemQuantity } = useContext(Context)
+function CartItemForWishList(props) {
+    const { currentUser } = useContext(Context)
 
     let {product_id, quantity, product_main_photo, product_unit_price, product_name} = props.item
 
-    const removeFromCart = () => {
+    const removeFromWishList = () => {
         if (Object.keys(currentUser).length > 0) {
             axios.post('http://localhost:3100/cart/remove-from-cart', {id: product_id})
                 .then(result => {
@@ -22,22 +22,20 @@ function CartItem(props) {
                 })
                 .catch(err => console.log(err))
         } else {
-            const cartFromLocalStorage = JSON.parse(localStorage.getItem('cart'))
-            for (let i = 0; i < cartFromLocalStorage.length; i++) {
-                if (cartFromLocalStorage[i].product_id === product_id) {
-                    cartFromLocalStorage.splice(i, 1);
-                    setStateForShopItemQuantity(!stateForShopItemQuantity);
-                    toggleIAmState()
+            const wishListFromLocalStorage = JSON.parse(localStorage.getItem('wishlist'))
+            for (let i = 0; i < wishListFromLocalStorage.length; i++) {
+                if (wishListFromLocalStorage[i].product_id === product_id) {
+                    wishListFromLocalStorage.splice(i, 1)
                 }
             }
-            localStorage.setItem('cart', JSON.stringify(cartFromLocalStorage))
+            localStorage.setItem('wishlist', JSON.stringify(wishListFromLocalStorage))
         }
     }
 
     return(
-        <Card className="mt-2" style={{ width: '700px', backgroundColor: "#fcfcfc" }}>
+        <Card className="mt-2" style={{ width: '600px', backgroundColor: "#fcfcfc"}}>
         <Row>
-            <Col xs={5} md={4} >
+            <Col xs={4} md={3} >
                 <Card.Img src={`./items/${product_main_photo}`}/>
             </Col>
             <Col >
@@ -46,22 +44,12 @@ function CartItem(props) {
                         <h5 style={{ fontWeight: 'bold' }}>$ {product_unit_price*quantity}</h5>
                     </Col>
                     <Col className="text-right mt-2 mr-3">
-                        <div onClick={() => {removeFromCart(); props.toggleCart()}} style={{cursor: 'pointer'}}><FontAwesomeIcon icon={faX} style={{ color: "gray" }} /></div>
+                        <div onClick={() => {removeFromWishList(); props.toggleCart()}} style={{cursor: 'pointer'}}><FontAwesomeIcon icon={faX} style={{ color: "gray" }} /></div>
                     </Col>
                 </Row>
-                <Row className="mb-2 mr-2">
+                <Row className="mb-5 mr-2" >
                     <Col>
                         <h6>{product_name}</h6>
-                    </Col>
-                </Row>
-                <Row >
-                    <Col>
-                        <h6 className="text-muted">Qty {quantity}</h6>
-                    </Col>
-                </Row>
-                <Row className="mb-3 mt-1">
-                    <Col>
-                        <button className="text-muted border-0" style={{backgroundColor: '#fcfcfc'}}> <FontAwesomeIcon icon={faHeart} color="red" size="xl" /> add to whishlist </button>
                     </Col>
                 </Row>
             </Col>
@@ -70,4 +58,4 @@ function CartItem(props) {
     )
 }
 
-export default CartItem;
+export default CartItemForWishList;

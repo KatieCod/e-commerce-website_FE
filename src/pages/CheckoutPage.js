@@ -8,9 +8,7 @@ import CheckoutItem from "../components/CheckoutItem";
 import axios from "axios";
 import { Context } from "../context";
 import moment from 'moment';
-import Bill from "../components/Bill";
 import Modal from 'react-bootstrap/Modal';
-import CartItem from "../components/CartItme";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -22,6 +20,7 @@ export default function CheckourPage() {
     const [cart, setCart] = useState([]);
     const { currentUser } = useContext(Context)
     const [delieveryAddress, toogleDelieveryAddress] = useToggle(false)
+    const [spinner, toggleSpinner] = useToggle(false)
 
     const notify = () => toast("Your cart is empty, add some items to proceed");
 
@@ -80,6 +79,10 @@ export default function CheckourPage() {
             }
         }
     }
+
+    // setTimeout(function () {
+    //     toggleSpinner();
+    // }, 4000);
 
     let totalQuantity = 0;
     let totalPrice = 0;
@@ -285,11 +288,12 @@ export default function CheckourPage() {
                                     {Object.keys(cart).length > 0 ?
                                         <div className="modal-dialog modal-dialog-centered">
                                             <Modal show={showBill} centered>
-                                                <Modal.Header>
-                                                    <Modal.Title className="text-center">
-                                                        The payment is successful <FontAwesomeIcon icon={faCheck} style={{ color: "green" }} size="lg" />
-                                                    </Modal.Title>
-                                                </Modal.Header>
+                                                <Modal.Title className="text-center">
+
+                                                    <p>The payment is successful <FontAwesomeIcon icon={faCheck} style={{ color: "green" }} size="lg" /></p>
+
+                                                </Modal.Title>
+
                                                 <Modal.Body>
                                                     <Row>
                                                         <Col xs={5}>Items</Col>
@@ -321,6 +325,7 @@ export default function CheckourPage() {
                                                         <Col ></Col>
                                                         <Col xs={2} style={{ fontWeight: 'bold' }}>{totalPrice}$</Col>
                                                     </Row>
+
                                                 </Modal.Body>
                                                 <Modal.Footer>
                                                     <Link to='/user-page'>
@@ -336,7 +341,7 @@ export default function CheckourPage() {
                             </Container>
                         </Col>
                     </Row>
-                </div>
+                </div >
             }
         </>
     )

@@ -1,9 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Context } from "../context";
-import { Container, Col, Row, Form, Button, Card } from "react-bootstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCaretUp } from '@fortawesome/free-solid-svg-icons'
-import { useToggle } from '../hooks/useToggle'
+import { Container, Col, Row, Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import UserPageOrder from "../components/UserPageOrder";
 

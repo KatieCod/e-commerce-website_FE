@@ -1,5 +1,5 @@
-import React from "react";
-import { Container, Card, Row, Col, Form, Button } from "react-bootstrap";
+import React, { useContext } from "react";
+import { Container, Card, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -7,20 +7,27 @@ import CartItem from "../components/CartItme";
 import { useToggle } from "../hooks/useToggle";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Context } from "../context";
 
 export default function CartPage() {
 
     const [cartItems, setCartItems] = useState([])
-    const [cart, toogleCart] = useToggle(false)
+    const [cart, toggleCart] = useToggle(false)
+    const { currentUser, setStateForShopItemQuantity, stateForShopItemQuantity, toggleIAmState } = useContext(Context)
 
     const notify = () => toast("Your cart is empty, add some items to proceed");
 
     useEffect(() => {
-        let cartItmes = axios.get('http://localhost:3100/cart')
-        cartItmes.then(res => {
-            setCartItems(res.data)
-        })
-    }, [])
+        if (Object.keys(currentUser).length > 0) {
+            let cartItmes = axios.get('http://localhost:3100/cart')
+            cartItmes.then(res => {
+                setCartItems(res.data)
+            })
+        } else {
+            const unauthorisedCart = JSON.parse(localStorage.getItem('cart'))
+            setCartItems(unauthorisedCart)
+        }
+    }, [cart])
 
     let totalQuantity = 0;
     let totalPrice = 0;
@@ -33,8 +40,9 @@ export default function CartPage() {
                     {cartItems.map(item => {
                         totalQuantity = totalQuantity + item.quantity
                         totalPrice = totalPrice + (item.quantity * item.product_unit_price)
+                        console.log(item)
                         if (item.quantity > 0) {
-                            return <CartItem key={item.id} item={item} toogleCart={toogleCart} />
+                            return <CartItem key={item.id} item={item} toggleCart={toggleCart} />
                         }
                     })}
 

@@ -59,7 +59,7 @@ function Homepage() {
                 <div className="row">
                     {products.map(product => {
                         if (product.featured === 1) {
-                            return <div className="col-md"><ProductForMainPage product={product} notify={notify}/></div>
+                            return <div className="col-md"><ProductForMainPage product={product} notify={notify} /></div>
                         }
                     })}
                 </div>
@@ -74,10 +74,26 @@ function Homepage() {
             </div>
             <div className="container mt-5">
                 <div className="row justify-content-center">
-                    <div className="col-6 col-md-3"><ChooseUs icon={<FontAwesomeIcon icon={faHandshakeSimple} size="2xl" />} /></div>
-                    <div className="col-6 col-md-3"><ChooseUs icon={<FontAwesomeIcon icon={faLeaf} size="2xl" />} /></div>
-                    <div className="col-6 col-md-3"><ChooseUs icon={<FontAwesomeIcon icon={faMedal} size="2xl" />} /></div>
-                    <div className="col-6 col-md-3"><ChooseUs icon={<FontAwesomeIcon icon={faPaw} size="2xl" />} /></div>
+                    <div className="col-6 col-md-3"><ChooseUs
+                        icon={<FontAwesomeIcon icon={faHandshakeSimple} size="2xl" />}
+                        title={'Trusted Suppliers'}
+                        description={'We speak Korean and have bulid trusted network of certified suppliers over the 4 years of R&D'} />
+                    </div>
+                    <div className="col-6 col-md-3"><ChooseUs icon={<FontAwesomeIcon
+                        icon={faLeaf} size="2xl" />}
+                        title={'ECO Ingredients'}
+                        description={'Our brands contain natural ingrediants and do not add sulfates, parabens, perfume, and artificial colours'} />
+                    </div>
+                    <div className="col-6 col-md-3"><ChooseUs
+                        icon={<FontAwesomeIcon icon={faMedal} size="2xl" />}
+                        title={'Quality Certificates'} 
+                        description={'Thorough brand and factory research allows us to offer you the best proved quality at the best price'} />
+                    </div>
+                    <div className="col-6 col-md-3"><ChooseUs 
+                    icon={<FontAwesomeIcon icon={faPaw} size="2xl" />} 
+                    title={'No Animal Testing'} 
+                    description={'No banny has suffered the testing of the South Korean Skin Care Products'}
+                    /></div>
                 </div>
             </div>
             <div className="d-flex justify-content-center mt-5">
