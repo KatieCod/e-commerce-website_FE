@@ -28,6 +28,7 @@ function Shop() {
     const [fromPrice, setFromPrice] = useState("");
     const [toPrice, setToPrice] = useState("");
     const [sider, toggleSider] = useToggle(false)
+    const [search, setSearch] = useState("");
 
     const { name } = useParams()
 
@@ -70,8 +71,19 @@ function Shop() {
 
     const handleToPriceChange = (e) => {
         setToPrice(e.target.value);
-        console.log(e.target.value);
     };
+
+    const handleSearch = (e) => {
+        setSearch(e.target.value);
+    };
+
+    const handleReset = () => {
+        setSelectedCategory('All');
+        setSelectedSkinType('All');
+        setFromPrice('');
+        setToPrice('');
+        setSearch('');
+    }
 
     const productsInRow = 4;
     let productsRow = [];
@@ -94,14 +106,18 @@ function Shop() {
         ? filteredBySkinType
         : filteredBySkinType.filter((product) => product.unit_price >= fromPrice && product.unit_price <= toPrice)
 
-    for (let i = 0; i < filteredPrice.length; i += productsInRow) {
-        const row = filteredPrice.slice(i, i + productsInRow);
+    const filteredSearch = !search
+        ? filteredPrice
+        : filteredPrice.filter((product) => product.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+
+    for (let i = 0; i < filteredSearch.length; i += productsInRow) {
+        const row = filteredSearch.slice(i, i + productsInRow);
         productsRow.push(row)
     }
-        
+
     return (
         <>
-            {width > 870 ? <ShopSider sider={sider} /> : <ShopHeader />}
+            {width > 870 ? <ShopSider sider={sider} /> : <ShopHeader sider={sider} />}
             <Container>
                 <h1 className="text-center mt-5">Store</h1>
                 <Form inline>
@@ -116,7 +132,8 @@ function Shop() {
                             <Form.Control
                                 type="text"
                                 placeholder="Search"
-                                className="mr-sm-2"
+                                value={search}
+                                onChange={handleSearch}
                             />
                         </Col>
                         <Col xs={2}>
@@ -128,7 +145,7 @@ function Shop() {
                             <Row className="text-center  mt-5">
                                 <Form>
                                     <Row className="mt-4 ">
-                                        <Col> Price </Col>
+                                        <Col className="mt-2"> Price </Col>
                                         <Col >
                                             <Form.Control
                                                 type="text"
@@ -138,7 +155,7 @@ function Shop() {
                                             />
                                         </Col>
                                         <Col>-</Col>
-                                        <Col>
+                                        <Col className="mr-4">
                                             <Form.Control
                                                 type="text"
                                                 placeholder="To"
@@ -184,6 +201,9 @@ function Shop() {
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </Col>
+                                <Col>
+                                    <Button variant="secondary" className="mt-4 mb-4" onClick={handleReset}>reset</Button>
+                                </Col>
                             </Row>
                         </Container>
                     }
@@ -205,7 +225,7 @@ function Shop() {
                             return <Row className="mt-5">
                                 {row.map(product => {
                                     return (<Col className="mt-4" lg={3} sm={6}>
-                                        <Product product={product} notify={notify} toggleSider={toggleSider} sider={sider}/>
+                                        <Product product={product} notify={notify} toggleSider={toggleSider} sider={sider} />
                                     </Col>)
                                 })}
                             </Row>
@@ -213,9 +233,9 @@ function Shop() {
                 }
                 <ToastContainer />
 
-                < Container className="mt-5 d-flex justify-content-center" >
+                {/* < Container className="mt-5 d-flex justify-content-center" >
                     <Button variant="light">Show More</Button>
-                </Container >
+                </Container > */}
             </Container >
         </>
     )

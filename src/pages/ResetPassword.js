@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Row, Col, Card } from "react-bootstrap";
-// import { useNavigate } from "react-router-dom";
-
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -10,7 +8,6 @@ function ResetPassword(props) {
     const [formData, setFormData] = useState({ email: '' })
     const [link, setLink] = useState('')
     const [serverResponse, setServerResponse] = useState('')
-    // const navigate = useNavigate()
 
     axios.defaults.withCredentials = true;
 

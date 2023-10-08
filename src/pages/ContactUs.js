@@ -40,7 +40,6 @@ function ContactUs() {
                 </Col>
 
                 <Col lg={7} sx={12} className="mt-5 mb-5">
-                    {/* <h4 className="text-center">WE ARE HERE </h4> */}
                     <div style={{ height: '50vh', width: '100%' }}>
                         <GoogleMapReact
                             bootstrapURLKeys={{ key: "" }}
@@ -51,7 +50,6 @@ function ContactUs() {
                     </div>
                 </Col>
             </Row>
-            {/* <h1 className="text-center mt-5">still got questions</h1> */}
             <h1 className="text-center mt-5">Write Us</h1>
             <Container className="justify-content-center mt-4" style={{ backgroundImage: 'heart.png' }}>
                 <Form style={{ maxWidth: '600px', margin: 'auto' }}>

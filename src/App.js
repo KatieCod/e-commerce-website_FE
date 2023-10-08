@@ -3,7 +3,6 @@ import Homepage from './pages/Homepage';
 import RegistrationForm from './pages/RegistrationPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Login from './pages/Login';
 import ResetPassword from './pages/ResetPassword';
 import ResetSuccess from './pages/ResetSuccess';
 import NewPassword from './pages/NewPassword';
@@ -15,14 +14,15 @@ import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import CheckourPage from './pages/CheckoutPage';
 import UserPage from './pages/UserPage';
+import LikePage from './pages/LikePage';
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import LoginHook from './pages/LoginHook';
 import { Context } from './context';
-import { useNavigate } from "react-router-dom";
-import ShopSider from './components/ShopSider';
+import getOrderDetails from './API/getOrderDetails';
+import getOrders from './API/getOrders';
+import getProducts from './API/getProducts';
 import { useToggle } from './hooks/useToggle';
-
 
 function App() {
 
@@ -32,6 +32,8 @@ function App() {
   let [products, setProducts] = useState([]);
   let [orders, setOrders] = useState([]);
   let [orderDetails, setOrderDetails] = useState([]);
+  let [iAmState, toggleIAmState] = useToggle(false);
+  let [stateForShopItemQuantity, setStateForShopItemQuantity] = useState(false);
   
   axios.defaults.withCredentials = true;
 
@@ -67,24 +69,9 @@ function App() {
   }
 
   useEffect(() => {
-    let products = axios.get('http://localhost:3100/products')
-    products.then(res => {
-      setProducts(res.data)
-    })
-  }, [])
-
-  useEffect(() => {
-    let orders = axios.get('http://localhost:3100/orders')
-    orders.then(res => {
-      setOrders(res.data)
-    })
-  }, [])
-
-  useEffect(() => {
-    let orders = axios.get('http://localhost:3100/orders/order-details')
-    orders.then(res => {
-      setOrderDetails(res.data)
-    })
+    getOrderDetails(setOrderDetails);
+    getOrders(setOrders);
+    getProducts(setProducts);
   }, [])
  
   return (
@@ -93,6 +80,10 @@ function App() {
       currentUser,
       orders,
       orderDetails,
+      iAmState,
+      toggleIAmState,
+      setStateForShopItemQuantity,
+      stateForShopItemQuantity
     }}>
       <>
         <Header currentUser={currentUser} authorized={authorized} handleLogout={handleLogout} />
@@ -111,9 +102,9 @@ function App() {
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/user-page" element={<UserPage />} />
+          <Route path="/wish-list" element={<LikePage />} />
         </Routes>
         <Footer />
-        <ShopSider/>
       </>
     </Context.Provider>
   );

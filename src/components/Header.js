@@ -1,10 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartShopping, faHeart, faRightToBracket, faMagnifyingGlass, faRightFromBracket, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faCartShopping, faHeart, faRightToBracket, faUser } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 function Header({ handleLogout, currentUser }) {
 
@@ -60,10 +57,10 @@ function Header({ handleLogout, currentUser }) {
                         <Link class="nav-link" to='/contact-us'>Contact Us</Link>
                     </li>
                 </ul>
-                <form class="form-inline my-2 my-lg-0 mr-3">
+                {/* <form class="form-inline my-2 my-lg-0 mr-3">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
                     <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit"><FontAwesomeIcon icon={faMagnifyingGlass} size="lg" /></button>
-                </form>
+                </form> */}
                 {Object.keys(currentUser).length > 0
                     ?
                     <>
@@ -76,7 +73,7 @@ function Header({ handleLogout, currentUser }) {
                 }
                 <div className="row justify-content-xl-center justify-content-start mt-3 mb-2 ml-1 mr-2">
                     <div className="col-0.5 mr-3 mt-2 mb-3">
-                        <Link to=''>
+                        <Link to='/wish-list'>
                             <FontAwesomeIcon icon={faHeart} style={{ color: "#ff0000" }} size="xl" />
                         </Link>
                     </div>
