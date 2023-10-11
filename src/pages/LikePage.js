@@ -19,7 +19,7 @@ export default function LikePage() {
 
     useEffect(() => {
         if (Object.keys(currentUser).length > 0) {
-            let cartItmes = axios.get('http://localhost:3100/cart')
+            let cartItmes = axios.get('http://localhost:3100/products/wishlist')
             cartItmes.then(res => {
                 setWishlist(res.data)
             })
@@ -29,26 +29,43 @@ export default function LikePage() {
         }
     }, [clearWishList])
 
+    const removeAllFromWishList = () => {
+        if (Object.keys(currentUser).length > 0) {
+            axios.post('http://localhost:3100/products/remove-from-wishlist', {product_id: null})
+                .then(result => {
+                    if (!result.data.failure) {
+                        console.log(result.data)
+                        togglClearWishList()
+                    } else {
+                        console.log(result.data.failure)
+                    }
+                })
+                .catch(err => console.log(err))
+        } else {
+            localStorage.setItem('wishlist', JSON.stringify([]));
+        }
+    }
+
     return (
         <Container>
             <h1 className="text-center mt-5" style={wishlist.length > 0 ? { marginBottom: "0px" } : { marginBottom: "80px" }}>Wish List</h1>
             <Container className="mt-4 justify-content-center">
                 <Row className="mt-4 justify-content-center">
                     {wishlist.map(item => {
-                        return <CartItemForWishList key={item.id} item={item} toggleCart={togglClearWishList} />
+                        return <CartItemForWishList key={item.id} item={item} togglClearWishList={togglClearWishList} />
                     })}
 
                 </Row>
             </Container>
             {wishlist.length > 0 ?
                 <Container className="text-center mt-5">
-                    <Button variant="secondary" onClick={() => { localStorage.setItem('wishlist', JSON.stringify([])); togglClearWishList() }}>Clear Wish List</Button>
+                    <Button variant="secondary" onClick={() => { removeAllFromWishList() }}>Clear Wish List</Button>
                 </Container>
                 :
                 <Container className="text-center">
                     <h3 className="mb-4"> Your wishlist is empty, explore our products <FontAwesomeIcon icon={solidHeart} style={{ color: "#ff476c" }} size="lg" /> </h3>
                     <Link to='/shop'>
-                    <Button variant="secondary" onClick={() => { localStorage.setItem('wishlist', JSON.stringify([])); togglClearWishList() }}>Go Shopping</Button>
+                        <Button variant="secondary">Go Shopping</Button>
                     </Link>
                 </Container>
             }

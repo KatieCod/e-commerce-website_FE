@@ -12,10 +12,10 @@ function CartItemForWishList(props) {
 
     const removeFromWishList = () => {
         if (Object.keys(currentUser).length > 0) {
-            axios.post('http://localhost:3100/cart/remove-from-cart', {id: product_id})
+            axios.post('http://localhost:3100/products/remove-from-wishlist', {product_id})
                 .then(result => {
                     if (!result.data.failure) {
-                        props.toggleCart()
+                        props.togglClearWishList()
                     } else {
                         console.log(result.data.failure)
                     }
@@ -44,7 +44,7 @@ function CartItemForWishList(props) {
                         <h5 style={{ fontWeight: 'bold' }}>$ {product_unit_price*quantity}</h5>
                     </Col>
                     <Col className="text-right mt-2 mr-3">
-                        <div onClick={() => {removeFromWishList(); props.toggleCart()}} style={{cursor: 'pointer'}}><FontAwesomeIcon icon={faX} style={{ color: "gray" }} /></div>
+                        <div onClick={() => {removeFromWishList(); props.togglClearWishList()}} style={{cursor: 'pointer'}}><FontAwesomeIcon icon={faX} style={{ color: "gray" }} /></div>
                     </Col>
                 </Row>
                 <Row className="mb-5 mr-2" >

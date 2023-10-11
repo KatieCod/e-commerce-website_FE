@@ -69,10 +69,11 @@ function App() {
   }
 
   useEffect(() => {
+    console.log("Fetching products...");
     getOrderDetails(setOrderDetails);
     getOrders(setOrders);
     getProducts(setProducts);
-  }, [])
+  }, [iAmState, stateForShopItemQuantity])
  
   return (
     <Context.Provider value={{

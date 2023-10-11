@@ -17,6 +17,7 @@ function Product(props) {
     let [itemQuantity, setItemQuantity] = useState(0);
     const { iAmState, currentUser, stateForShopItemQuantity } = useContext(Context)
     const [heart, toggleHeart] = useToggle(false)
+    const [authorizedHeart, toggleAuthorizedHeart] = useToggle(false)
 
     let { id, name, unit_price, main_photo, quantity = 1 } = props.product || {}
     let productData = { id, name, unit_price, main_photo, quantity, user_id: currentUser.id }
@@ -36,6 +37,7 @@ function Product(props) {
     }, [])
 
     useEffect(() => {
+        console.log('seeting a new quantity')
         if (Object.keys(currentUser).length > 0) {
             let quantity = axios.get('http://localhost:3100/cart')
             quantity.then(res => {
@@ -45,6 +47,21 @@ function Product(props) {
                     for (let i = 0; i < res.data.length; i++) {
                         if (res.data[i].product_id === id) {
                             setItemQuantity(res.data[i].quantity)
+                            break;
+                        }
+                        setItemQuantity(0)
+                    }
+                }
+            })
+
+            let wishlistItems = axios.get('http://localhost:3100/products/wishlist')
+            wishlistItems.then(res => {
+                if (res.data.length === 0) {
+                    // console.log('empty wishlist')
+                } else {
+                    for (let i = 0; i < res.data.length; i++) {
+                        if (res.data[i].product_id === id && !authorizedHeart) {
+                            toggleAuthorizedHeart()
                         }
                     }
                 }
@@ -54,21 +71,23 @@ function Product(props) {
             if (cartFromLocalStorage === null) {
                 localStorage.setItem('cart', JSON.stringify([]))
             }
+            setItemQuantity(0)
             for (let i = 0; i < cartFromLocalStorage.length; i++) {
                 if (cartFromLocalStorage[i].product_id === productDataForLocalStorage.product_id) {
                     setItemQuantity(cartFromLocalStorage[i].quantity)
                     break;
+                } else {
+                    setItemQuantity(0)
+                }
+            }
+            const wishListFromLocalStorage = JSON.parse(localStorage.getItem('wishlist'))
+            for (let i = 0; i < wishListFromLocalStorage.length; i++) {
+                if (wishListFromLocalStorage[i].product_id === productDataForLocalStorage.product_id && !heart) {
+                    toggleHeart()
                 }
             }
         }
 
-        const wishListFromLocalStorage = JSON.parse(localStorage.getItem('wishlist'))
-        for (let i = 0; i < wishListFromLocalStorage.length; i++) {
-            if (wishListFromLocalStorage[i].product_id === productDataForLocalStorage.product_id && !heart) {
-                toggleHeart()
-            }
-        }
-        
     }, [changeCart1, changeCart2, props.sider, props.shopProduct, iAmState, stateForShopItemQuantity])
 
     const addToCart = () => {
@@ -120,10 +139,10 @@ function Product(props) {
 
     const addItemToWishList = () => {
         if (Object.keys(currentUser).length > 0) {
-            axios.post('http://localhost:3100/products/add-to-cart', productData)
+            axios.post('http://localhost:3100/products/add-to-wishlist', productData)
                 .then(result => {
                     if (!result.data.failure) {
-                        toggleChangeCart1()
+                        console.log(result.data)
                     } else {
                         console.log(result.data.failure)
                     }
@@ -149,10 +168,10 @@ function Product(props) {
 
     const removeItemFromWishList = () => {
         if (Object.keys(currentUser).length > 0) {
-            axios.post('http://localhost:3100/products/add-to-cart', productData)
+            axios.post('http://localhost:3100/products/remove-from-wishlist', productDataForLocalStorage)
                 .then(result => {
                     if (!result.data.failure) {
-                        toggleChangeCart1()
+                        console.log(result.data)
                     } else {
                         console.log(result.data.failure)
                     }
@@ -204,11 +223,11 @@ function Product(props) {
         <div class="card border-0 text-center" style={{ width: "18rem;" }}>
             <div className="image-wrapper">
                 <img className="card-img-top" src={`${baseUrl}/items/${main_photo}`} alt="Card image cap" />
-                {heart
+                {heart || authorizedHeart
                     ?
-                    <div className="image-icon" onClick={() => { toggleHeart(); removeItemFromWishList(); }}><FontAwesomeIcon icon={solidHeart} style={{ color: "#ff476c" }} size="lg" /></div>
+                    <div className="image-icon" onClick={() => { heart ? toggleHeart() : toggleAuthorizedHeart(); removeItemFromWishList(); }}><FontAwesomeIcon icon={solidHeart} style={{ color: "#ff476c" }} size="lg" /></div>
                     :
-                    <div className="image-icon" onClick={() => { toggleHeart(); addItemToWishList(); }}><FontAwesomeIcon icon={regularHeart} style={{ color: "#ff476c" }} size="lg" /></div>
+                    <div className="image-icon" onClick={() => { heart ? toggleHeart() : toggleAuthorizedHeart(); addItemToWishList(); }}><FontAwesomeIcon icon={regularHeart} style={{ color: "#ff476c" }} size="lg" /></div>
                 }
             </div>
             <Link style={{ textDecoration: 'none', color: 'black' }} to={`/product/${id}`}>

@@ -18,6 +18,7 @@ function ProductForMainPage(props) {
     let [itemQuantity, setItemQuantity] = useState(0);
     const { currentUser } = useContext(Context)
     const [heart, toggleHeart] = useToggle(false)
+    const [authorizedHeart, toggleAuthorizedHeart] = useToggle(false)
 
     let { id, name, unit_price, main_photo, quantity = 1 } = props.product || {}
     let productData = { id, name, unit_price, main_photo, quantity }
@@ -50,6 +51,20 @@ function ProductForMainPage(props) {
                     }
                 }
             })
+
+            let wishlistItems = axios.get('http://localhost:3100/products/wishlist')
+            wishlistItems.then(res => {
+                console.log(res.data)
+                if (res.data.length === 0) {
+                    console.log('empty wishlist')
+                } else {
+                    for (let i = 0; i < res.data.length; i++) {
+                        if (res.data[i].product_id === id && !authorizedHeart) {
+                            toggleAuthorizedHeart()
+                        }
+                    }
+                }
+            })
         } else {
             const cartFromLocalStorage = JSON.parse(localStorage.getItem('cart'))
             if (cartFromLocalStorage === null) {
@@ -61,14 +76,14 @@ function ProductForMainPage(props) {
                     break;
                 }
             }
-        }
-
-        const wishListFromLocalStorage = JSON.parse(localStorage.getItem('wishlist'))
-        for (let i = 0; i < wishListFromLocalStorage.length; i++) {
-            if (wishListFromLocalStorage[i].product_id === productDataForLocalStorage.product_id && !heart) {
-                toggleHeart()
+            const wishListFromLocalStorage = JSON.parse(localStorage.getItem('wishlist'))
+            for (let i = 0; i < wishListFromLocalStorage.length; i++) {
+                if (wishListFromLocalStorage[i].product_id === productDataForLocalStorage.product_id && !heart) {
+                    toggleHeart()
+                }
             }
         }
+
 
     }, [changeCart1, changeCart2, props.sider])
 
@@ -121,10 +136,10 @@ function ProductForMainPage(props) {
 
     const addItemToWishList = () => {
         if (Object.keys(currentUser).length > 0) {
-            axios.post('http://localhost:3100/products/add-to-cart', productData)
+            axios.post('http://localhost:3100/products/add-to-wishlist', productData)
                 .then(result => {
                     if (!result.data.failure) {
-                        toggleChangeCart1()
+                        console.log(result.data)
                     } else {
                         console.log(result.data.failure)
                     }
@@ -150,10 +165,10 @@ function ProductForMainPage(props) {
 
     const removeItemFromWishList = () => {
         if (Object.keys(currentUser).length > 0) {
-            axios.post('http://localhost:3100/products/add-to-cart', productData)
+            axios.post('http://localhost:3100/products/remove-from-wishlist', productDataForLocalStorage)
                 .then(result => {
                     if (!result.data.failure) {
-                        toggleChangeCart1()
+                        console.log(result.data)
                     } else {
                         console.log(result.data.failure)
                     }
@@ -169,6 +184,7 @@ function ProductForMainPage(props) {
             localStorage.setItem('wishlist', JSON.stringify(wishListFromLocalStorage))
         }
     }
+
 
     const decreaseQunatity = () => {
         if (Object.keys(currentUser).length > 0) {
@@ -205,11 +221,11 @@ function ProductForMainPage(props) {
         <div class="card border-0 text-center" style={{ width: "18rem;" }}>
             <div className="image-wrapper">
                 <img className="card-img-top" src={`${baseUrl}/items/${main_photo}`} alt="Card image cap" />
-                {heart
+                {heart || authorizedHeart
                     ?
-                    <div className="image-icon" onClick={() => { toggleHeart(); removeItemFromWishList(); }}><FontAwesomeIcon icon={solidHeart} style={{ color: "#ff476c" }} size="lg" /></div>
+                    <div className="image-icon" onClick={() => { heart? toggleHeart() : toggleAuthorizedHeart(); removeItemFromWishList(); }}><FontAwesomeIcon icon={solidHeart} style={{ color: "#ff476c" }} size="lg" /></div>
                     :
-                    <div className="image-icon" onClick={() => { toggleHeart(); addItemToWishList(); }}><FontAwesomeIcon icon={regularHeart} style={{ color: "#ff476c" }} size="lg" /></div>
+                    <div className="image-icon" onClick={() => { heart? toggleHeart() : toggleAuthorizedHeart(); addItemToWishList(); }}><FontAwesomeIcon icon={regularHeart} style={{ color: "#ff476c" }} size="lg" /></div>
                 }
             </div>
             <Link style={{ textDecoration: 'none', color: 'black' }} to={`/product/${id}`}>

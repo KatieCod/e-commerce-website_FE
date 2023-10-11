@@ -12,49 +12,49 @@ function Header({ handleLogout, currentUser }) {
             <Link className="navbar-brand" to="/homepage">
                 <img src={`${baseUrl}/mainpage/clionce.png `} width="200" height="54" className="d-inline-block align-top" alt="" />
             </Link>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <Link class="nav-link" to="/shop">Store <span class="sr-only">(current)</span></Link>
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul className="navbar-nav mr-auto">
+                    <li className="nav-item active" style={{fontWeight: "800"}}>
+                        <Link className="nav-link" to="/shop">Store <span className="sr-only">(current)</span></Link>
                     </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <li className="nav-item dropdown">
+                        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Categories
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <Link to='/shop' class="dropdown-item" href="#">
+                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <Link to='/shop' className="dropdown-item" href="#">
                                 All
                             </Link>
-                            <Link to='/shop/cream' class="dropdown-item" href="#">
+                            <Link to='/shop/cream' className="dropdown-item" href="#">
                                 Cream
                             </Link>
-                            <Link to='/shop/serum' class="dropdown-item" href="#">
+                            <Link to='/shop/serum' className="dropdown-item" href="#">
                                 Serum
                             </Link>
-                            <Link to='/shop/mask' class="dropdown-item" href="#">
+                            <Link to='/shop/mask' className="dropdown-item" href="#">
                                 Mask
                             </Link>
-                            <Link to='/shop/toner' class="dropdown-item" href="#">
+                            <Link to='/shop/toner' className="dropdown-item" href="#">
                                 Toner
                             </Link>
-                            <Link to='/shop/cleanser' class="dropdown-item" href="#">
+                            <Link to='/shop/cleanser' className="dropdown-item" href="#">
                                 Cleanser
                             </Link>
-                            <Link to='/shop/kit' class="dropdown-item" href="#">
+                            <Link to='/shop/kit' className="dropdown-item" href="#">
                                 Kit
                             </Link>
                         </div>
                     </li>
-                    <li class="nav-item">
-                        <Link class="nav-link" to='/about-us'>About Us</Link>
+                    <li className="nav-item">
+                        <Link className="nav-link" to='/about-us'>About Us</Link>
                     </li>
                     <li class="nav-item">
-                        <Link class="nav-link" to='/contact-us'>Contact Us</Link>
+                        <Link className="nav-link" to='/contact-us'>Contact Us</Link>
                     </li>
                 </ul>
                 {/* <form class="form-inline my-2 my-lg-0 mr-3">

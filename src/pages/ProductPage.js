@@ -48,7 +48,7 @@ function ProductPage() {
                     }
                 }
             }
-            setIsLoading(false)
+            // setIsLoading(false)
         })
     }, [toggleQuantity, product_id])
 
@@ -91,9 +91,9 @@ function ProductPage() {
             .catch(err => console.log(err))
     }
 
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
+    // if (isLoading) {
+    //     return <div>Loading...</div>
+    // }
 
     return (
         <Container>
