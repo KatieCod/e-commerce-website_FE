@@ -13,7 +13,7 @@ export default function CartPage() {
 
     const [cartItems, setCartItems] = useState([])
     const [cart, toggleCart] = useToggle(false)
-    const { currentUser, setStateForShopItemQuantity, stateForShopItemQuantity, toggleIAmState } = useContext(Context)
+    const { currentUser, setStateForShopItemQuantity, stateForShopItemQuantity, toggleIAmState, iAmState } = useContext(Context)
 
     const notify = () => toast("Your cart is empty, add some items to proceed");
 
@@ -27,7 +27,32 @@ export default function CartPage() {
             const unauthorisedCart = JSON.parse(localStorage.getItem('cart'))
             setCartItems(unauthorisedCart)
         }
-    }, [cart])
+    }, [cart, iAmState])
+
+    const removeFromCart = (product_id) => {
+        if (Object.keys(currentUser).length > 0) {
+            axios.post('http://localhost:3100/cart/remove-from-cart', {id: product_id})
+                .then(result => {
+                    if (!result.data.failure) {
+                        toggleIAmState()
+                        toggleCart()
+                    } else {
+                        console.log(result.data.failure)
+                    }
+                })
+                .catch(err => console.log(err))
+        } else {
+            const cartFromLocalStorage = JSON.parse(localStorage.getItem('cart'))
+            for (let i = 0; i < cartFromLocalStorage.length; i++) {
+                if (cartFromLocalStorage[i].product_id === product_id) {
+                    cartFromLocalStorage.splice(i, 1);
+                    setStateForShopItemQuantity(!stateForShopItemQuantity);
+                    toggleIAmState();
+                }
+            }
+            localStorage.setItem('cart', JSON.stringify(cartFromLocalStorage))
+        }
+    }
 
     let totalQuantity = 0;
     let totalPrice = 0;
@@ -42,7 +67,7 @@ export default function CartPage() {
                         totalPrice = totalPrice + (item.quantity * item.product_unit_price)
                         console.log(item)
                         if (item.quantity > 0) {
-                            return <CartItem key={item.id} item={item} toggleCart={toggleCart} />
+                            return <CartItem key={item.id} item={item} removeFromCart={removeFromCart} />
                         }
                     })}
 

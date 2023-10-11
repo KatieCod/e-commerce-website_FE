@@ -43,11 +43,13 @@ function ShopSider(props) {
     }, [])
 
     const removeFromCart = (product_id) => {
+        setStateForShopItemQuantity(!stateForShopItemQuantity);
+        toggleIAmState()
         if (Object.keys(currentUser).length > 0) {
             axios.post('http://localhost:3100/cart/remove-from-cart', { id: product_id })
                 .then(result => {
                     if (!result.data.failure) {
-                        toggleChangeCart();
+                        setStateForShopItemQuantity(!stateForShopItemQuantity);
                         toggleIAmState()
                     } else {
                         console.log(result.data.failure)
