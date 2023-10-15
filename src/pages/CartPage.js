@@ -14,24 +14,35 @@ export default function CartPage() {
     const [cartItems, setCartItems] = useState([])
     const [cart, toggleCart] = useToggle(false)
     const { currentUser, setStateForShopItemQuantity, stateForShopItemQuantity, toggleIAmState, iAmState } = useContext(Context)
+    const [totalQuantity, setTotalQuantity] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
 
     const notify = () => toast("Your cart is empty, add some items to proceed");
+    const notifyNoMoreItemInStock = () => toast("You have reached stock maximum");
 
     useEffect(() => {
+        const quantityArr = [];
+        const priceArr = [];
         if (Object.keys(currentUser).length > 0) {
             let cartItmes = axios.get('http://localhost:3100/cart')
             cartItmes.then(res => {
                 setCartItems(res.data)
+                res.data.map((item) => {
+                    quantityArr.push(item.quantity)
+                    priceArr.push(item.quantity*item.product_unit_price)
+                    setTotalQuantity(quantityArr.reduce((a,b) => a+b, 0))
+                    setTotalPrice(priceArr.reduce((a,b) => a+b, 0))
+                })
             })
         } else {
             const unauthorisedCart = JSON.parse(localStorage.getItem('cart'))
             setCartItems(unauthorisedCart)
         }
-    }, [cart, iAmState])
+    }, [cart, iAmState, cartItems])
 
     const removeFromCart = (product_id) => {
         if (Object.keys(currentUser).length > 0) {
-            axios.post('http://localhost:3100/cart/remove-from-cart', {id: product_id})
+            axios.post('http://localhost:3100/cart/remove-from-cart', { id: product_id })
                 .then(result => {
                     if (!result.data.failure) {
                         toggleIAmState()
@@ -45,7 +56,7 @@ export default function CartPage() {
             const cartFromLocalStorage = JSON.parse(localStorage.getItem('cart'))
             for (let i = 0; i < cartFromLocalStorage.length; i++) {
                 if (cartFromLocalStorage[i].product_id === product_id) {
-                    cartFromLocalStorage.splice(i, 1);
+                    cartFromLocalStorage.splice(i);
                     setStateForShopItemQuantity(!stateForShopItemQuantity);
                     toggleIAmState();
                 }
@@ -54,8 +65,18 @@ export default function CartPage() {
         }
     }
 
-    let totalQuantity = 0;
-    let totalPrice = 0;
+    const countTotal = (quantity, price) => {
+        let newTotalQuantity = 0;
+        let newTotalPrice = 0;
+
+        newTotalQuantity = newTotalQuantity + quantity;
+        newTotalPrice = newTotalPrice + (quantity * price)
+
+        setTotalQuantity(newTotalQuantity);
+        console.log(`this is new total quantity ${newTotalQuantity}`);
+        setTotalPrice(newTotalPrice);
+        console.log(`this is new total price ${newTotalPrice}`);
+    }
 
     return (
         <Container>
@@ -63,13 +84,17 @@ export default function CartPage() {
             <Container className="mt-4 justify-content-center">
                 <Row className="mt-4 justify-content-center">
                     {cartItems.map(item => {
-                        totalQuantity = totalQuantity + item.quantity
-                        totalPrice = totalPrice + (item.quantity * item.product_unit_price)
-                        console.log(item)
                         if (item.quantity > 0) {
-                            return <CartItem key={item.id} item={item} removeFromCart={removeFromCart} />
+                            return <CartItem 
+                            key={item.id} 
+                            item={item} 
+                            notify={notifyNoMoreItemInStock} 
+                            removeFromCart={removeFromCart} 
+                            toggleCart={toggleCart}
+                            countTotal={countTotal} />
                         }
                     })}
+                    <ToastContainer />
 
                 </Row>
                 <Container className="w-50 border-top border-secondary mt-3"></Container>
@@ -80,7 +105,7 @@ export default function CartPage() {
                                 <h5>Total</h5>
                             </Col>
                             <Col className="mt-2">
-                                Quntity: {totalQuantity} pc.
+                                Quantity: {totalQuantity} pc.
                             </Col>
                             <Col className="mt-2">
                                 Price: {totalPrice}$

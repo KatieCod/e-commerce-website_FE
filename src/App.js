@@ -15,6 +15,7 @@ import CartPage from './pages/CartPage';
 import CheckourPage from './pages/CheckoutPage';
 import UserPage from './pages/UserPage';
 import LikePage from './pages/LikePage';
+import AdminPage from './pages/AdminPage';
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import LoginHook from './pages/LoginHook';
@@ -23,6 +24,7 @@ import getOrderDetails from './API/getOrderDetails';
 import getOrders from './API/getOrders';
 import getProducts from './API/getProducts';
 import { useToggle } from './hooks/useToggle';
+import getUsers from './API/getUsers';
 
 function App() {
 
@@ -31,6 +33,7 @@ function App() {
   const [urlData, setUrlData] = useState({})
   let [products, setProducts] = useState([]);
   let [orders, setOrders] = useState([]);
+  let [users, setUsers] = useState([]);
   let [orderDetails, setOrderDetails] = useState([]);
   let [iAmState, toggleIAmState] = useToggle(false);
   let [stateForShopItemQuantity, setStateForShopItemQuantity] = useState(false);
@@ -73,6 +76,7 @@ function App() {
     getOrderDetails(setOrderDetails);
     getOrders(setOrders);
     getProducts(setProducts);
+    getUsers(setUsers);
   }, [iAmState, stateForShopItemQuantity])
  
   return (
@@ -84,7 +88,8 @@ function App() {
       iAmState,
       toggleIAmState,
       setStateForShopItemQuantity,
-      stateForShopItemQuantity
+      stateForShopItemQuantity,
+      users
     }}>
       <>
         <Header currentUser={currentUser} authorized={authorized} handleLogout={handleLogout} />
@@ -104,6 +109,7 @@ function App() {
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/user-page" element={<UserPage />} />
           <Route path="/wish-list" element={<LikePage />} />
+          <Route path="/admin-page" element={<AdminPage />} />
         </Routes>
         <Footer />
       </>
