@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartShopping, faHeart, faRightToBracket, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faCartShopping, faHeart, faRightToBracket, faUser, faUserTie } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 
 function Header({ handleLogout, currentUser }) {
@@ -18,7 +18,7 @@ function Header({ handleLogout, currentUser }) {
 
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav mr-auto">
-                    <li className="nav-item active" style={{fontWeight: "800"}}>
+                    <li className="nav-item active" style={{ fontWeight: "800" }}>
                         <Link className="nav-link" to="/shop">Store <span className="sr-only">(current)</span></Link>
                     </li>
 
@@ -64,7 +64,7 @@ function Header({ handleLogout, currentUser }) {
                 {Object.keys(currentUser).length > 0
                     ?
                     <>
-                        <div className="mt-2 mr-3 ml-1" >
+                        <div className="mt-3 mr-3 ml-1" >
                             <p> Hi {currentUser.first_name}!</p>
                         </div>
                     </>
@@ -72,24 +72,39 @@ function Header({ handleLogout, currentUser }) {
                     <></>
                 }
                 <div className="row justify-content-xl-center justify-content-start mt-3 mb-2 ml-1 mr-2">
-                    <div className="col-0.5 mr-3 mt-2 mb-3">
-                        <Link to='/wish-list'>
-                            <FontAwesomeIcon icon={faHeart} style={{ color: "#ff0000" }} size="xl" />
-                        </Link>
-                    </div>
+                    {currentUser.admin_access ?
+                        <></>
+                        :
+                        <div className="col-0.5 mr-3 mt-2 mb-3">
+                            <Link to='/wish-list'>
+                                <FontAwesomeIcon icon={faHeart} style={{ color: "#ff0000" }} size="xl" />
+                            </Link>
+                        </div>
+                    }
                     <div className="col-0.5 mr-3">
                         <div className="nav-item dropdown">
                             {Object.keys(currentUser).length > 0
                                 ?
-                                <>
-                                    <a className="nav-link" href="#" style={{ color: "black" }} id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <FontAwesomeIcon icon={faUser} size="xl" />
-                                    </a>
-                                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <div onClick={handleLogout} className="dropdown-item" to="/login_page">Logout</div>
-                                        <Link className="dropdown-item" to="/user-page">{`${currentUser.first_name}'s page`}</Link>
-                                    </div>
-                                </>
+                                currentUser.admin_access ?
+                                    <>
+                                        <a className="nav-link" href="#" style={{ color: "black" }} id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <FontAwesomeIcon icon={faUserTie} size="xl" />
+                                        </a>
+                                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <div onClick={handleLogout} className="dropdown-item" to="/login_page">Logout</div>
+                                            <Link className="dropdown-item" to="/admin-page">{`${currentUser.first_name}'s AP`}</Link>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <a className="nav-link" href="#" style={{ color: "black" }} id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <FontAwesomeIcon icon={faUser} size="xl" />
+                                        </a>
+                                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <div onClick={handleLogout} className="dropdown-item" to="/login_page">Logout</div>
+                                            <Link className="dropdown-item" to="/user-page">{`${currentUser.first_name}'s page`}</Link>
+                                        </div>
+                                    </>
                                 :
                                 <>
                                     <a className="nav-link" href="#" style={{ color: "black" }} id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -103,9 +118,14 @@ function Header({ handleLogout, currentUser }) {
                             }
                         </div>
                     </div>
+                    {currentUser.admin_access 
+                    ?
+                    <></>
+                    :
                     <div className="col-0.5 mt-2">
                         <Link to="/cart_page"><FontAwesomeIcon icon={faCartShopping} style={{ marginRight: "8px", color: "black" }} size="xl" /></Link>
-                    </div>
+                    </div>                      
+                    }
                 </div>
             </div>
         </nav>
