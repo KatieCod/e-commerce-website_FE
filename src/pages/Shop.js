@@ -29,6 +29,7 @@ function Shop() {
     const [toPrice, setToPrice] = useState("");
     const [sider, toggleSider] = useToggle(false)
     const [search, setSearch] = useState("");
+    const [pagination, setPagination] = useState(3)
 
     const { name } = useParams()
 
@@ -113,6 +114,10 @@ function Shop() {
     for (let i = 0; i < filteredSearch.length; i += productsInRow) {
         const row = filteredSearch.slice(i, i + productsInRow);
         productsRow.push(row)
+    }
+
+    const implementPagination = (num) => {
+        return productsRow.splice(num)
     }
 
     return (
@@ -221,21 +226,29 @@ function Shop() {
                             </Row>
                         })
                         :
-                        productsRow.map((row) => {
-                            return <Row className="mt-5">
-                                {row.map(product => {
-                                    return (<Col className="mt-4" lg={3} sm={6}>
-                                        <Product product={product} notify={notify} toggleSider={toggleSider} sider={sider} />
-                                    </Col>)
-                                })}
-                            </Row>
-                        })
+                        productsRow.map((row, index) => (
+                            index < pagination
+                                ? (
+                                    <Row className="mt-5">
+                                        {row.map(product => {
+                                            return (<Col className="mt-4" lg={3} sm={6}>
+                                                <Product product={product} notify={notify} toggleSider={toggleSider} sider={sider} />
+                                            </Col>)
+                                        })}
+                                    </Row>)
+                                :
+                                null
+                        ))
                 }
                 <ToastContainer />
 
-                {/* < Container className="mt-5 d-flex justify-content-center" >
-                    <Button variant="light">Show More</Button>
-                </Container > */}
+                < Container className="mt-5 d-flex justify-content-center" >
+                    <Button variant="light" onClick={() => {
+                        setPagination(pagination + 3)
+                    }}>
+                        Show More
+                    </Button>
+                </Container >
             </Container >
         </>
     )

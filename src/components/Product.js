@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar, faCartShopping } from '@fortawesome/free-solid-svg-icons'
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons'
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons'
+import { faStar as regular } from "@fortawesome/free-regular-svg-icons";
+import { faStar as solid } from "@fortawesome/free-solid-svg-icons";
 import { Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -15,13 +17,15 @@ function Product(props) {
     const [changeCart2, toggleChangeCart2] = useToggle(false);
     let [stock, setStock] = useState();
     let [itemQuantity, setItemQuantity] = useState(0);
-    const { iAmState, currentUser, stateForShopItemQuantity } = useContext(Context)
+    const { iAmState, currentUser, stateForShopItemQuantity, reviews } = useContext(Context)
     const [heart, toggleHeart] = useToggle(false)
     const [authorizedHeart, toggleAuthorizedHeart] = useToggle(false)
+    const [ranking, setRanking] = useState(0)
 
     let { id, name, unit_price, main_photo, quantity = 1 } = props.product || {}
     let productData = { id, name, unit_price, main_photo, quantity, user_id: currentUser.id }
     let productDataForLocalStorage = { product_id: id, product_name: name, product_unit_price: unit_price, product_main_photo: main_photo, quantity }
+    const stars = [1, 2, 3, 4, 5];
 
     const baseUrl = "http://localhost:3000"
 
@@ -31,6 +35,7 @@ function Product(props) {
             for (let i = 0; i < res.data.length; i++) {
                 if (res.data[i].id === id) {
                     setStock(res.data[i].stock)
+                    countTotalRanking()
                 }
             }
         })
@@ -219,6 +224,22 @@ function Product(props) {
         }
     }
 
+    const countTotalRanking = () => {
+
+        let productRanking = 0;
+        let counter = 0;
+
+        for (let i = 0; i < reviews.length; i++) {
+            if (reviews[i].product_id === id && reviews[i].approved) {
+                productRanking += reviews[i].ranking;
+                counter++
+            }
+        }
+
+        const totalRanking = productRanking / counter
+        setRanking(Math.ceil(totalRanking))
+    }
+
     return (
         <div class="card border-0 text-center" style={{ width: "18rem;" }}>
             <div className="image-wrapper">
@@ -243,7 +264,7 @@ function Product(props) {
                     <Col xs={4} className="text-right"><div onClick={() => { addToCart(); props.toggleSider() }} style={{ cursor: 'pointer' }}><FontAwesomeIcon icon={faCartShopping} style={{ marginRight: "8px" }} size="xl" /></div></Col>
                 </Row>
                 :
-                <Row>
+                <Row className="product-details">
                     <Col xs={6} className="text-center"><h5 >${unit_price}</h5></Col>
                     <Col xs={6} className="text-right">
                         <Row>
@@ -256,12 +277,17 @@ function Product(props) {
                     </Col>
                 </Row>
             }
-            <Row className="justify-content-center">
-                <FontAwesomeIcon icon={faStar} style={{ color: "#f5ed0a", }} />
-                <FontAwesomeIcon icon={faStar} style={{ color: "#f5ed0a", }} />
-                <FontAwesomeIcon icon={faStar} style={{ color: "#f5ed0a", }} />
-                <FontAwesomeIcon icon={faStar} style={{ color: "#f5ed0a", }} />
-                <FontAwesomeIcon icon={faStar} style={{ color: "#f5ed0a", }} />
+            <Row className="justify-content-center product-details">
+                <div>
+                    {stars.map((star) => (
+                        <span
+                            key={star}
+                            className={`star3 ${star <= ranking ? 'filled' : ''}`}
+                        >
+                            {star <= ranking ? <FontAwesomeIcon icon={solid} /> : <FontAwesomeIcon icon={regular} />}
+                        </span>
+                    ))}
+                </div>
             </Row>
 
         </div>
