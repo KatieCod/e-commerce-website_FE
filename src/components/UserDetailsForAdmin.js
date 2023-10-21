@@ -1,14 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../context";
 import { Container, Col, Row, Form, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import UserPageOrder from "../components/UserPageOrder";
-
 
 function UserDetailsForAdmin(props) {
 
+    const [counter, setCounter] = useState(0)
+
     const { orders } = useContext(Context)
+
     let { id, first_name, last_name, email, phone, admin_access, address, city, country, zip } = props.user
+
+    useEffect(() => {
+        const hasOrders = orders.some(order => order.user_id === id);
+
+        if (hasOrders) {
+            setCounter(1);
+        }
+    }, [orders, id]);
 
     return (
         <Container className="text-center mt-3 mb-3" style={{ backgroundColor: 'rgb(252, 252, 252)' }}>
@@ -66,16 +75,18 @@ function UserDetailsForAdmin(props) {
                         </Row>
                     </Form>
                 </Container>
-                {Array.isArray(orders) && orders.length > 0
+                {counter > 0
                     ?
-                    <h3 className=" text-center mt-5">List of Orders</h3>
-                    : null
+                    <div>
+                        <h3 className=" text-center mt-5">List of Orders</h3>
+                    </div>
+                    : <> </>
                 }
-                { orders.map(order => {
+                {orders.map(order => {
                     if (order.user_id === id) {
                         return <UserPageOrder order={order} />
-                    }
-                })}
+                    } 
+                })} 
             </div>
         </Container>
     )

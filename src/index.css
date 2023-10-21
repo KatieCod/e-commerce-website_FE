@@ -240,3 +240,47 @@ html body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.star {
+  font-size: 24px;
+  margin-right: 5px;
+  cursor: pointer;
+  color: gold;
+}
+
+.star.filled {
+  color: gold;
+}
+
+.star2 {
+  font-size: 24px;
+  margin-right: 5px;
+  color: gold;
+}
+
+.star2.filled {
+  color: gold;
+}
+
+.star3 {
+  font-size: 18px;
+  margin-right: 5px;
+  color: gold;
+}
+
+.star3.filled {
+  color: gold;
+}
+
+.product-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.product-details {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}

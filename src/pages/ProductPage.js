@@ -1,13 +1,18 @@
 import React from "react";
 import { Col, Container, Row, Card, Button, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart, faStar, } from '@fortawesome/free-regular-svg-icons'
+import { faStar as regular } from "@fortawesome/free-regular-svg-icons";
+import { faStar as solid } from "@fortawesome/free-solid-svg-icons";
 import { faCaretUp, faCartShopping, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { useToggle } from '../hooks/useToggle'
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import RatingStars from "../components/RatingStars";
+import { Context } from "../context";
+import addReview from "../API/addRview";
+import ReviewCard from "../components/ReviewCard";
 
 function ProductPage() {
     const [showDetails, toggleDetails] = useToggle(false)
@@ -16,17 +21,24 @@ function ProductPage() {
     const [product, setProducts] = useState('');
     let [stock, setStock] = useState();
     let [itemQuantity, setItemQuantity] = useState(0);
-    const [isLoading, setIsLoading] = useState(true);
+    const { currentUser, reviews } = useContext(Context)
+    const [userName, setUserName] = useState(``)
+    const [reviewText, setReviewText] = useState('');
+    const [rating, setRating] = useState(0);
+    const [reviewSubmitted, setReviewSubmitted] = useState(false);
+    const [ranking, setRanking] = useState(0)
 
     const { id } = useParams()
 
-    let product_id = product.id
+    const product_id = product.id
 
     let { name, unit_price, main_photo, quantity = 1 } = product
     let productData = { id: product_id, name, unit_price, main_photo, quantity }
 
     const sqlDate = new Date(product.expiration_date);
+    const currentDate = new Date().toLocaleDateString()
     const baseUrl = "http://localhost:3000"
+    const stars = [1, 2, 3, 4, 5];
 
     useEffect(() => {
         let featuredProducts = axios.get(`http://localhost:3100/products/${id}`)
@@ -48,7 +60,6 @@ function ProductPage() {
                     }
                 }
             }
-            // setIsLoading(false)
         })
     }, [toggleQuantity, product_id])
 
@@ -58,14 +69,30 @@ function ProductPage() {
             for (let i = 0; i < res.data.length; i++) {
                 if (res.data[i].id === product.id) {
                     setStock(res.data[i].stock)
+                    countTotalRanking()
                 }
             }
         })
     }, [product])
 
+    const countTotalRanking = () => {
+
+        let productRanking = 0;
+        let counter = 0;
+
+        for (let i = 0; i < reviews.length; i++) {
+            if (reviews[i].product_id === product_id && reviews[i].approved) {
+                productRanking += reviews[i].ranking;
+                counter++
+            }
+        }
+
+        const totalRanking = productRanking / counter
+        console.log(totalRanking)
+        setRanking(Math.ceil(totalRanking))
+    }
+
     const addToCart = () => {
-        console.log(`this is itemQuantity ${itemQuantity}`)
-        console.log(`this is stock ${stock}`)
         if (itemQuantity < stock) {
             axios.post('http://localhost:3100/products/add-to-cart', productData)
                 .then(result => {
@@ -91,9 +118,27 @@ function ProductPage() {
             .catch(err => console.log(err))
     }
 
-    // if (isLoading) {
-    //     return <div>Loading...</div>
-    // }
+    const handleStarClick = (selectedRating) => {
+        setRating(selectedRating);
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'name') {
+            setUserName(value)
+        } else if (name === 'text') {
+            setReviewText(value)
+        }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const dataForAddingReview = {
+            text: reviewText, user_id: currentUser.id,
+            user_name: userName, ranking: rating, product_id: product_id, approved: 0, date: currentDate, product_name: name, product_photo: main_photo
+        };
+        addReview(dataForAddingReview, setReviewSubmitted, reviewSubmitted)
+    }
 
     return (
         <Container>
@@ -102,9 +147,9 @@ function ProductPage() {
                     <FontAwesomeIcon icon={faArrowLeft} /> Back to store
                 </div>
             </Link>
-            <Row>
+            {/* <Row>
                 <Col className="text-right mt-4"><FontAwesomeIcon icon={faHeart} style={{ color: "#ff476c" }} size="2xl" /></Col>
-            </Row>
+            </Row> */}
             <Container className="mt-2">
                 <Row>
                     <Card border="0" style={{ width: '78rem' }}>
@@ -123,11 +168,16 @@ function ProductPage() {
                                 <Card.Body>
                                     <Card.Title>{product.name}</Card.Title>
                                     <Card.Text>
-                                        <FontAwesomeIcon icon={faStar} style={{ color: "#f5ed0a", }} />
-                                        <FontAwesomeIcon icon={faStar} style={{ color: "#f5ed0a", }} />
-                                        <FontAwesomeIcon icon={faStar} style={{ color: "#f5ed0a", }} />
-                                        <FontAwesomeIcon icon={faStar} style={{ color: "#f5ed0a", }} />
-                                        <FontAwesomeIcon icon={faStar} style={{ color: "#f5ed0a", }} />
+                                        <div>
+                                            {stars.map((star) => (
+                                                <span
+                                                    key={star}
+                                                    className={`star3 ${star <= ranking ? 'filled' : ''}`}
+                                                >
+                                                    {star <= ranking ? <FontAwesomeIcon icon={solid} /> : <FontAwesomeIcon icon={regular} />}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </Card.Text>
                                     <Card.Text className="mt-3">
                                         {product.description}
@@ -190,6 +240,63 @@ function ProductPage() {
                     </Card>
                 </Row>
             </Container>
+            <Container style={{ maxWidth: '800px' }}>
+                {rating ?
+                    <div className="text-center mt-5">
+                        <h3>Reviews</h3>
+                    </div>
+                    :
+                    <></>
+                }
+                {reviews.map((review) => (
+                    (review.product_id === product_id) && (<div key={review.id}>
+                        {review.approved ? (
+                            <ReviewCard review={review} />
+                        ) : (
+                            ''
+                        )}
+                    </div>)
+                ))}
+            </Container>
+            {Object.keys(currentUser).length > 0 ?
+                <div>
+                    {reviewSubmitted
+                        ?
+                        <Container className="text-center mt-5">
+                            <h3>Thank you, your review has been received!</h3>
+                            <h3>It will be available on the website after approval!</h3>
+                        </Container>
+                        :
+                        <Container className="text-center mt-5">
+                            <h3>Leave a review</h3>
+                            <Form>
+                                <Form.Control
+                                    placeholder="Name"
+                                    defaultValue={userName}
+                                    name="name"
+                                    style={{ maxWidth: '500px' }}
+                                    className="mx-auto mt-4"
+                                    onBlur={handleChange}
+                                />
+                                <Form.Control
+                                    placeholder="Review text"
+                                    name="text"
+                                    defaultValue={reviewText}
+                                    style={{ maxWidth: '500px' }}
+                                    className="mx-auto mt-4"
+                                    as='textarea'
+                                    onBlur={handleChange}
+                                    rows={5}
+                                />
+                                <RatingStars rating={rating} onStarClick={handleStarClick} />
+                                <Button variant="success" className="mx-auto mt-4" onClick={handleSubmit}>Submit</Button>
+                            </Form>
+                        </Container>
+                    }
+                </div>
+                :
+                <></>
+            }
         </Container>
     )
 }

@@ -25,6 +25,7 @@ import getOrders from './API/getOrders';
 import getProducts from './API/getProducts';
 import { useToggle } from './hooks/useToggle';
 import getUsers from './API/getUsers';
+import getReviews from './API/getReviews';
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
   let [products, setProducts] = useState([]);
   let [orders, setOrders] = useState([]);
   let [users, setUsers] = useState([]);
+  let [reviews, setReviews] = useState([]);
   let [orderDetails, setOrderDetails] = useState([]);
   let [iAmState, toggleIAmState] = useToggle(false);
   let [stateForShopItemQuantity, setStateForShopItemQuantity] = useState(false);
@@ -72,11 +74,11 @@ function App() {
   }
 
   useEffect(() => {
-    console.log("Fetching products...");
     getOrderDetails(setOrderDetails);
     getOrders(setOrders);
     getProducts(setProducts);
     getUsers(setUsers);
+    getReviews(setReviews);
   }, [iAmState, stateForShopItemQuantity])
  
   return (
@@ -89,7 +91,8 @@ function App() {
       toggleIAmState,
       setStateForShopItemQuantity,
       stateForShopItemQuantity,
-      users
+      users,
+      reviews
     }}>
       <>
         <Header currentUser={currentUser} authorized={authorized} handleLogout={handleLogout} />

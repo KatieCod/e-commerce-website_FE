@@ -4,13 +4,15 @@ import { Context } from "../context";
 import CartItemForAdminPage from "../components/CartItemForAdminPage";
 import UserForAdminPage from "../components/UserForAdminPage";
 import ItemDetailsForAdmin from "../components/ItemDetailsForAdmin";
+import ReviewsForAdmin from "../components/ReviewsForAdmin";
 import { Link } from "react-router-dom";
 
 function AdminPage() {
 
     const [show, setShow] = useState('');
     const [addItem, setAddItem] = useState(false);
-    const { products, users, currentUser } = useContext(Context)
+    const { products, users, currentUser, reviews } = useContext(Context)
+    const [pagination, setPagination] = useState(4);
 
     const manageShow = (status) => {
         setShow(status)
@@ -25,22 +27,22 @@ function AdminPage() {
                         <Container>
                             <Row className="mt-3" >
                                 <Col>
-                                    <Button variant="secondary" style={{ width: '200px' }} onClick={() => { manageShow('items') }}>Manage Items</Button>
+                                    <Button variant={show === 'items' ? "success" : "light"} style={{ width: '200px', border: '1px solid lightgray' }} onClick={() => { manageShow('items') }}>Manage Items</Button>
                                 </Col>
                             </Row>
                             <Row className="mt-3">
                                 <Col>
-                                    <Button variant="secondary" style={{ width: '200px' }} onClick={() => { manageShow('users') }}>Manage Users</Button>
+                                    <Button variant={show === 'users' ? "success" : "light"} style={{ width: '200px', border: '1px solid lightgray' }} onClick={() => { manageShow('users') }}>Manage Users</Button>
                                 </Col>
                             </Row>
                             <Row className="mt-3">
                                 <Col>
-                                    <Button variant="secondary" style={{ width: '200px' }} onClick={() => { manageShow('inbox') }}>Manage Inbox</Button>
+                                    <Button variant={show === 'inbox' ? "success" : "light"} style={{ width: '200px', border: '1px solid lightgray' }} onClick={() => { manageShow('inbox') }}>Manage Inbox</Button>
                                 </Col>
                             </Row>
                             <Row className="mt-3 mb-3">
                                 <Col>
-                                    <Button variant="secondary" style={{ width: '200px' }} onClick={() => { manageShow('reviews') }}>Manage Reviews</Button>
+                                    <Button variant={show === 'reviews' ? "success" : "light"} style={{ width: '200px', border: '1px solid lightgray' }} onClick={() => { manageShow('reviews') }}>Manage Reviews</Button>
                                 </Col>
                             </Row>
                         </Container>
@@ -57,17 +59,59 @@ function AdminPage() {
 
                                 </>
                             )}
-                            {show === 'items' && (products.map((product) => (
-                                <Row>
+                            {show === 'items' && (products.map((product, index) => (
+                                index < pagination &&
+                                (<Row>
                                     <CartItemForAdminPage key={product.id} item={product} />
-                                </Row>
+                                </Row>)
                             ))
+                            )}
+                            {show === 'items' && (
+                                < Container className="mt-3 d-flex justify-content-center" >
+                                    {pagination < 4 ? null : <Button variant="success" onClick={() => { setPagination(pagination - 4) }} className="mr-3 ">Show Less</Button>}
+                                    <Button variant="success" onClick={() => {
+                                        setPagination(pagination + 4)
+                                    }}>
+                                        Show More
+                                    </Button>
+                                </Container >
+                            )}
+                            {show === 'users' && (
+                                <>
+                                    <Container className="text-center mt-3">
+                                        <h3>Manage Users</h3>
+                                    </Container>
+                                </>
                             )}
                             {show === 'users' && (users.map((user) => (
                                 <Row>
                                     <UserForAdminPage key={user.id} user={user} />
                                 </Row>
                             ))
+                            )}
+                            {show === 'reviews' && (
+                                <>
+                                    <Container className="text-center mt-3">
+                                        <h3>Manage Reviews</h3>
+                                    </Container>
+                                </>
+                            )}
+                            {show === 'reviews' && (reviews.map((review, index) => (
+                                index < pagination &&
+                                (<Row>
+                                    <ReviewsForAdmin key={review.id} review={review} />
+                                </Row>)
+                            ))
+                            )}
+                            {show === 'reviews' && (
+                                < Container className="mt-3 d-flex justify-content-center" >
+                                    {pagination < 4 ? null : <Button variant="success" onClick={() => { setPagination(pagination - 4) }} className="mr-3 ">Show Less</Button>}
+                                    <Button variant="success" onClick={() => {
+                                        setPagination(pagination + 4)
+                                    }}>
+                                        Show More
+                                    </Button>
+                                </Container >
                             )}
                         </Container>
                     </Col>
@@ -77,7 +121,7 @@ function AdminPage() {
     } else if (Object.keys(currentUser).length > 0 && !currentUser.admin_access) {
         return (
             <Container className="text-center mt-5 mb-5">
-                <h1>You do not have access to admin website, please log in as admin!</h1>
+                <h1>You do not have access to admin webpage, please log in as admin!</h1>
             </Container>
         )
     } else {
