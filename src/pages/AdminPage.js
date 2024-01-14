@@ -13,11 +13,13 @@ function AdminPage() {
     const [addItem, setAddItem] = useState(false);
     const { products, users, currentUser, reviews } = useContext(Context)
     const [pagination, setPagination] = useState(4);
+    const [showNotApproved, setShowNotApproved] = useState(false);
 
     const manageShow = (status) => {
         setShow(status)
     }
 
+    const filteredReviews = showNotApproved ? reviews.filter((review) => !review.approved) : reviews
 
     if (Object.keys(currentUser).length > 0 && currentUser.admin_access) {
         return (
@@ -52,6 +54,9 @@ function AdminPage() {
                         <Container>
                             {show === 'items' && (
                                 <>
+                                 <Container className="text-center mt-3">
+                                        <h3>Manage Items</h3>
+                                    </Container>
                                     <Container className="text-md-right text-center mt-3">
                                         <Button variant="success" style={{ width: '100px' }} onClick={() => { setAddItem(!addItem) }}>Add Item</Button>
                                     </Container>
@@ -94,13 +99,17 @@ function AdminPage() {
                                     <Container className="text-center mt-3">
                                         <h3>Manage Reviews</h3>
                                     </Container>
+                                    <Container className="text-md-right text-center mt-3">
+                                        <Button variant="success" onClick={() => setShowNotApproved(!showNotApproved)}>{showNotApproved ? 'Show All' :'Show not Approved'}</Button>
+                                    </Container>
                                 </>
                             )}
-                            {show === 'reviews' && (reviews.map((review, index) => (
+                            {show === 'reviews' && (filteredReviews.map((review, index) => (
                                 index < pagination &&
                                 (<Row>
                                     <ReviewsForAdmin key={review.id} review={review} />
                                 </Row>)
+                                
                             ))
                             )}
                             {show === 'reviews' && (

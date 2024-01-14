@@ -59,7 +59,7 @@ export default function LikePage() {
             </Container>
             {wishlist.length > 0 ?
                 <Container className="text-center mt-5">
-                    <Button variant="secondary" onClick={() => { removeAllFromWishList() }}>Clear Wish List</Button>
+                    <Button variant="secondary" onClick={() => { removeAllFromWishList(); togglClearWishList() }}>Clear Wish List</Button>
                 </Container>
                 :
                 <Container className="text-center">

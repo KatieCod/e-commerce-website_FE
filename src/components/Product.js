@@ -117,26 +117,20 @@ function Product(props) {
                 setItemQuantity(1)
                 localStorage.setItem('cart', JSON.stringify([firstItem]))
             } else {
-                let itemFound = false;
-                for (let i = 0; i < cartFromLocalStorage.length; i++) {
-                    if (cartFromLocalStorage[i].quantity < stock) {
-                        if (cartFromLocalStorage[i].product_id === productDataForLocalStorage.product_id) {
-                            cartFromLocalStorage[i].quantity += 1
-                            setItemQuantity(cartFromLocalStorage[i].quantity)
-                            itemFound = true;
-                            break;
-                        }
+                const itemInCart = cartFromLocalStorage.find(item => item.product_id === productDataForLocalStorage.product_id);
+                if (itemInCart) {
+                    if(itemInCart.quantity < stock) {
+                        itemInCart.quantity+=1
+                        setItemQuantity(itemInCart.quantity)
                     } else {
                         props.notify()
                     }
-                }
-
-                if (!itemFound) {
+                } else {
                     const anotherItem = { ...productDataForLocalStorage, quantity: 1 };
                     setItemQuantity(1)
                     cartFromLocalStorage.push(anotherItem)
                 }
-
+                
                 localStorage.setItem('cart', JSON.stringify(cartFromLocalStorage))
             }
         }
@@ -214,7 +208,7 @@ function Product(props) {
                         setItemQuantity(cartFromLocalStorage[i].quantity)
                         break;
                     } else {
-                        cartFromLocalStorage.splice(i)
+                        cartFromLocalStorage.splice(i, 1)
                         setItemQuantity(0)
                     }
                 }

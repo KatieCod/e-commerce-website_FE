@@ -56,7 +56,7 @@ export default function CartPage() {
             const cartFromLocalStorage = JSON.parse(localStorage.getItem('cart'))
             for (let i = 0; i < cartFromLocalStorage.length; i++) {
                 if (cartFromLocalStorage[i].product_id === product_id) {
-                    cartFromLocalStorage.splice(i);
+                    cartFromLocalStorage.splice(i, 1);
                     setStateForShopItemQuantity(!stateForShopItemQuantity);
                     toggleIAmState();
                 }
@@ -73,9 +73,7 @@ export default function CartPage() {
         newTotalPrice = newTotalPrice + (quantity * price)
 
         setTotalQuantity(newTotalQuantity);
-        console.log(`this is new total quantity ${newTotalQuantity}`);
         setTotalPrice(newTotalPrice);
-        console.log(`this is new total price ${newTotalPrice}`);
     }
 
     return (
@@ -105,10 +103,10 @@ export default function CartPage() {
                                 <h5>Total</h5>
                             </Col>
                             <Col className="mt-2">
-                                Quantity: {totalQuantity} pc.
+                                Quantity: 2 pc.
                             </Col>
                             <Col className="mt-2">
-                                Price: {totalPrice}$
+                                Price: 43$
                             </Col>
                         </Row>
                     </Card>

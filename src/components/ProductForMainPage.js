@@ -77,9 +77,13 @@ function ProductForMainPage(props) {
                 }
             }
             const wishListFromLocalStorage = JSON.parse(localStorage.getItem('wishlist'))
-            for (let i = 0; i < wishListFromLocalStorage.length; i++) {
-                if (wishListFromLocalStorage[i].product_id === productDataForLocalStorage.product_id && !heart) {
-                    toggleHeart()
+            if (wishListFromLocalStorage === null) {
+                localStorage.setItem('wishlist', JSON.stringify([]))
+            } else {
+                for (let i = 0; i < wishListFromLocalStorage.length; i++) {
+                    if (wishListFromLocalStorage[i].product_id === productDataForLocalStorage.product_id && !heart) {
+                        toggleHeart()
+                    }
                 }
             }
         }
@@ -223,9 +227,9 @@ function ProductForMainPage(props) {
                 <img className="card-img-top" src={`${baseUrl}/items/${main_photo}`} alt="Card image cap" />
                 {heart || authorizedHeart
                     ?
-                    <div className="image-icon" onClick={() => { heart? toggleHeart() : toggleAuthorizedHeart(); removeItemFromWishList(); }}><FontAwesomeIcon icon={solidHeart} style={{ color: "#ff476c" }} size="lg" /></div>
+                    <div className="image-icon" onClick={() => { heart ? toggleHeart() : toggleAuthorizedHeart(); removeItemFromWishList(); }}><FontAwesomeIcon icon={solidHeart} style={{ color: "#ff476c" }} size="lg" /></div>
                     :
-                    <div className="image-icon" onClick={() => { heart? toggleHeart() : toggleAuthorizedHeart(); addItemToWishList(); }}><FontAwesomeIcon icon={regularHeart} style={{ color: "#ff476c" }} size="lg" /></div>
+                    <div className="image-icon" onClick={() => { heart ? toggleHeart() : toggleAuthorizedHeart(); addItemToWishList(); }}><FontAwesomeIcon icon={regularHeart} style={{ color: "#ff476c" }} size="lg" /></div>
                 }
             </div>
             <Link style={{ textDecoration: 'none', color: 'black' }} to={`/product/${id}`}>

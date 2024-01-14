@@ -18,7 +18,7 @@ export default function CheckourPage() {
     const [showCart, toggleCart] = useToggle(false)
     const [showBill, toggleBill] = useToggle(false)
     const [cart, setCart] = useState([]);
-    const { currentUser } = useContext(Context)
+    const { currentUser, toggleIAmState } = useContext(Context)
     const [delieveryAddress, toogleDelieveryAddress] = useToggle(false)
     const [spinner, toggleSpinner] = useToggle(false)
 
@@ -329,7 +329,7 @@ export default function CheckourPage() {
                                                 </Modal.Body>
                                                 <Modal.Footer>
                                                     <Link to='/user-page'>
-                                                        <Button variant="light">Go to user page</Button>
+                                                        <Button variant="light" onClick={toggleIAmState}>Go to user page</Button>
                                                     </Link>
                                                 </Modal.Footer>
                                             </Modal>
