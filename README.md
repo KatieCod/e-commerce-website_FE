@@ -31,7 +31,7 @@ This project provides a comprehensive solution for e-commerce websites. The fron
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/KatieCod/e-commerce.git
+   git clone https://github.com/KatieCod/e-commerce-website_FE.git
 
 2. Navigate to the front-end directory:
 
