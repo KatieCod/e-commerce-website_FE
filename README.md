@@ -57,17 +57,17 @@ This project provides a comprehensive solution for e-commerce websites. The fron
 
 |-- public/  
 |-- src/  
-|  |-- API/  
-|  |-- components/  
-|  |-- hooks/  
-|  |-- pages/  
-|  |-- validations/  
-|  |-- App.js  
-|  |-- App.css  
-|  |-- context.js  
-|  |-- fetching.js  
-|  |-- index.css  
-|  |-- index.js  
+|--|-- API/  
+|--|-- components/  
+|--|-- hooks/  
+|--|-- pages/  
+|--|-- validations/  
+|--|-- App.js  
+|--|-- App.css  
+|--|-- context.js  
+|--|-- fetching.js  
+|--|-- index.css  
+|--|-- index.js  
 |-- package.json  
 |-- package-lock.json.json  
 |-- .gitignore  
