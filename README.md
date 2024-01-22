@@ -12,7 +12,7 @@ Welcome to my E-Commerce project! This repository contains the front-end compone
 
 ## Overview
 
-This project provides a comprehensive solution for e-commerce websites. The front-end is developed using React, while the back-end is built with Express.js. The combination of these frameworks allows a seamless and responsive user experience for both customers and admins.
+This project provides a comprehensive solution for responsive single page application for e-commerce. The front-end is developed using React, while the back-end is built with Express.js. The combination of these frameworks allows a seamless and responsive user experience for both customers and admins.
 
 ## Features
 
