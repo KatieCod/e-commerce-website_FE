@@ -53,7 +53,7 @@ This project provides a comprehensive solution for e-commerce websites. The fron
 
 ## Folder Structure
 
-e-commerce-website_FE/
+### e-commerce-website_FE/
 
 -|-- public/
 -|-- src/
