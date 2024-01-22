@@ -45,3 +45,9 @@ This project provides a comprehensive solution for e-commerce websites. The fron
 
    npm start
 
+## Usage
+
+1. Open your web browser and go to http://localhost:3000 to access the front-end.
+
+2. The back-end API is available at http://localhost:3100.
+
