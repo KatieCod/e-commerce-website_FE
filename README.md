@@ -51,3 +51,24 @@ This project provides a comprehensive solution for e-commerce websites. The fron
 
 2. The back-end API is available at http://localhost:3100.
 
+## Folder Structure
+
+e-commerce-website_FE/
+
+|-- public/
+|-- src/
+|   |-- API/
+|   |-- components/
+|   |-- hooks/
+|   |-- pages/
+|   |-- validations/
+|   |-- App.js
+|   |-- App.css
+|   |-- context.js
+|   |-- fetching.js
+|   |-- index.css
+|   |-- index.js
+|-- package.json
+|-- package-lock.json.json
+|-- .gitignore
+|-- README.md
